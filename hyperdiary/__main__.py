@@ -84,4 +84,5 @@ def main():
         traceback.print_tb(tb)
         print(RED + type(e).__name__ + ': ' + str(e))
 
-main()
+if __name__ == '__main__':
+    main()

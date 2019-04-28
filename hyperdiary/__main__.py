@@ -67,18 +67,21 @@ def _view_exec(args):
     view(args.date)
 view_parser.set_defaults(func=_view_exec)
 
-try:
-    args = parser.parse_args()
-    args.func(args)
-except Exception as e:
-    import sys, traceback
-    tb = sys.exc_info()[2]
-    RED = ''
+def main():
     try:
-        import colorama
-        colorama.init(autoreset=True)
-        RED = colorama.Back.RED
-    except ImportError:
-        pass
-    traceback.print_tb(tb)
-    print(RED + type(e).__name__ + ': ' + str(e))
+        args = parser.parse_args()
+        args.func(args)
+    except Exception as e:
+        import sys, traceback
+        tb = sys.exc_info()[2]
+        RED = ''
+        try:
+            import colorama
+            colorama.init(autoreset=True)
+            RED = colorama.Back.RED
+        except ImportError:
+            pass
+        traceback.print_tb(tb)
+        print(RED + type(e).__name__ + ': ' + str(e))
+
+main()

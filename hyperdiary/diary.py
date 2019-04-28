@@ -20,7 +20,7 @@ def load_all():
 
     for fname in get_files():
         with open(fname) as f:
-            for dt, entry in yaml.load(f).items()   :
+            for dt, entry in yaml.load(f, Loader=yaml.SafeLoader).items():
                 if dt in entries:
                     raise Exception('Double definition for {0} in file {1}'.format(dt, fname))
                 entries[dt] = entry

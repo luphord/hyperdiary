@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from diary import load_all
+from .diary import load_all
 
 def check():
     entries = load_all()

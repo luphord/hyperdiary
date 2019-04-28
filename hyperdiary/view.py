@@ -1,4 +1,4 @@
-from diary import load_all
+from .diary import load_all
 from datetime import date, timedelta
 
 def view(date):

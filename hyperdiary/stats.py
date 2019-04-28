@@ -3,7 +3,7 @@ from sys import argv
 from argparse import ArgumentParser
 from collections import OrderedDict
 
-from diary import find_tags, find_ids, iter_entries
+from .diary import find_tags, find_ids, iter_entries
 
 def stats(args):
     with open(args.file) as f:

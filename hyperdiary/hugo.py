@@ -1,6 +1,6 @@
 import os
 import io
-import diary
+from . import diary
 
 def nice_date(dt):
     return dt.strftime("%d.%m.%Y")

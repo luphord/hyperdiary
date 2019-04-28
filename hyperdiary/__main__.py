@@ -1,9 +1,9 @@
 from argparse import ArgumentParser
-from check import check
-from stats import stats
-from html import diary_to_html, diary_to_html_folder
-from hugo import diary_to_hugo
-from tiddlywiki import diary_to_tiddlers
+from .check import check
+from .stats import stats
+from .html import diary_to_html, diary_to_html_folder
+from .hugo import diary_to_hugo
+from .tiddlywiki import diary_to_tiddlers
 from datetime import datetime, date, timedelta
 
 parser = ArgumentParser(description='The hyperdiary main command line interface.')

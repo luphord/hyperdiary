@@ -2,9 +2,9 @@ import os,re
 from datetime import date, timedelta
 from itertools import groupby
 from collections import defaultdict
-import diary
-from simplepath import AbsolutePath, RelativePath
-from htmltags import *
+from . import diary
+from .simplepath import AbsolutePath, RelativePath
+from .htmltags import *
 
 def nice_date(dt):
     return dt.strftime("%d.%m.%Y")

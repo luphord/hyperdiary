@@ -21,7 +21,7 @@ def _validate_and_shorten(is_absolute: bool, elements: Iterable[str]) -> List[st
     >>> _validate_and_shorten(True, ['..', '..'])
     Traceback (most recent call last):
         ...
-    simplepath.InvalidPathError: traversing over root
+    hyperdiary.simplepath.InvalidPathError: traversing over root
 
     >>> _validate_and_shorten(True, ['x', '..'])
     []
@@ -117,12 +117,12 @@ class AbsolutePath:
         >>> AbsolutePath('a/b/c')
         Traceback (most recent call last):
             ...
-        simplepath.NotAnAbsolutePathError: a/b/c
+        hyperdiary.simplepath.NotAnAbsolutePathError: a/b/c
 
         >>> AbsolutePath('')
         Traceback (most recent call last):
             ...
-        simplepath.NotAnAbsolutePathError
+        hyperdiary.simplepath.NotAnAbsolutePathError
         '''
         if not path.startswith('/'):
             raise NotAnAbsolutePathError(path)
@@ -162,7 +162,7 @@ class AbsolutePath:
         >>> AbsolutePath('/a/b/c') + RelativePath('../../../..')
         Traceback (most recent call last):
             ...
-        simplepath.InvalidPathError: traversing over root
+        hyperdiary.simplepath.InvalidPathError: traversing over root
 
         >>> AbsolutePath('/a/b/c/././') + RelativePath('../../../x/y') == AbsolutePath('/x/y')
         True

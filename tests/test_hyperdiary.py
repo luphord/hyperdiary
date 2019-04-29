@@ -4,10 +4,10 @@
 
 import unittest
 
-from hyperdiary import main
+from hyperdiary import parser
 
 
 class TestHyperdiary(unittest.TestCase):
 
     def test_command_line_interface(self):
-        main()
+        self.assertEqual('check', parser.parse_args(['check']).subcommand)

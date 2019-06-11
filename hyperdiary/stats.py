@@ -7,7 +7,7 @@ from .diary import find_tags, find_ids, iter_entries
 
 def stats(args):
     with open(args.file) as f:
-      y = yaml.load(f)
+      y = yaml.load(f, Loader=yaml.SafeLoader)
 
     output = OrderedDict()
     output['# Days'] = len(y)

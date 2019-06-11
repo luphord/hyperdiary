@@ -5,7 +5,7 @@ import yaml
 import json
 from pathlib import Path
 
-def get_files():
+def load_project():
     path = Path('.').resolve()
     while not (path / 'hyperdiary.json').exists() and len(path.parts) > 1:
         path = path.parent
@@ -13,12 +13,14 @@ def get_files():
     if not project_json.exists():
         raise Exception('No hyperdiary.json found in any parent directories')
     with open(str(project_json), 'r') as f:
-        return [str(path / f) for f in json.load(f)['sources']]
+        project = json.load(f)
+        project['sources'] = [str(path / f) for f in project['sources']]
+        return project
 
 def load_all():
     entries = dict()
-
-    for fname in get_files():
+    project = load_project()
+    for fname in project['sources']:
         with open(fname) as f:
             for dt, entry in yaml.load(f, Loader=yaml.SafeLoader).items():
                 if dt in entries:

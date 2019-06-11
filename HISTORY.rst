@@ -2,6 +2,12 @@
 History
 =======
 
+0.2.0 (not yet)
+---------------
+
+* stats subcommand can be invoked for all entries
+* Integrate Travis CI for automated testing
+
 0.1.2 (2019-06-11)
 ------------------
 

@@ -5,6 +5,12 @@ import yaml
 import json
 from pathlib import Path
 
+class Diary:
+    def __init__(self, project, entries):
+        for key, val in project.items():
+            setattr(self, key, val)
+        self.entries = entries
+
 def load_project():
     path = Path('.').resolve()
     while not (path / 'hyperdiary.json').exists() and len(path.parts) > 1:
@@ -26,8 +32,8 @@ def load_all():
                 if dt in entries:
                     raise Exception('Double definition for {0} in file {1}'.format(dt, fname))
                 entries[dt] = entry
-
-    return entries
+    
+    return Diary(project, entries)
 
 @enum.unique
 class EntryType(enum.Enum):

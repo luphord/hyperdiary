@@ -10,7 +10,7 @@ def stats(args):
       with open(args.file) as f:
         y = yaml.load(f, Loader=yaml.SafeLoader)
     else:
-      y = load_all()
+      y = load_all().entries
 
     output = OrderedDict()
     output['# Days'] = len(y)

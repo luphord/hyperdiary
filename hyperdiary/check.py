@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from .diary import load_all
 
 def check():
-    entries = load_all()
+    entries = load_all().entries
 
     current = date(2016,1,5)
     today = date.today()

@@ -53,7 +53,7 @@ def wrap_html_page(content, title=None, level=0):
     )
 
 def diary_to_html(fname):
-    entries = diary.load_all()
+    entries = diary.load_all().entries
 
     content = div(h1('Entries'))
     entries_html = content.subelement(div())
@@ -64,7 +64,7 @@ def diary_to_html(fname):
     wrap_html_page(content, title='Diary').write(fname)
 
 def diary_to_html_folder(folder):
-    entries = diary.load_all()
+    entries = diary.load_all().entries
     dates = list(entries.keys())
     dates.sort()
 

@@ -6,7 +6,7 @@ def nice_date(dt):
     return dt.strftime("%d.%m.%Y")
 
 def diary_to_tiddlers(tiddler_dir):
-    entries = diary.load_all()
+    entries = diary.load_all().entries
     os.makedirs(tiddler_dir, exist_ok=True)
 
     for current in sorted(entries.keys()):

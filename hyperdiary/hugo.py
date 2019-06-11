@@ -6,7 +6,7 @@ def nice_date(dt):
     return dt.strftime("%d.%m.%Y")
 
 def diary_to_hugo(fname):
-    entries = diary.load_all()
+    entries = diary.load_all().entries
     content_dir = os.path.join(fname, 'content')
     os.makedirs(content_dir, exist_ok=True)
 

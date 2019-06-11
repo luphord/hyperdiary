@@ -4,6 +4,7 @@ from .stats import stats
 from .html import diary_to_html, diary_to_html_folder
 from .hugo import diary_to_hugo
 from .tiddlywiki import diary_to_tiddlers
+from .view import view
 from datetime import datetime, date, timedelta
 
 parser = ArgumentParser(description='The hyperdiary main command line interface.')
@@ -63,7 +64,6 @@ def parse_date(sdate):
     return datetime.strptime(sdate, '%Y-%m-%d').date()
 view_parser.add_argument('date', type=parse_date)
 def _view_exec(args):
-    from view import view
     view(args.date)
 view_parser.set_defaults(func=_view_exec)
 

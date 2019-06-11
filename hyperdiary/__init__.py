@@ -18,7 +18,7 @@ def _check_exec(args):
 check_parser.set_defaults(func=_check_exec)
 
 stats_parser = subparsers.add_parser('stats', help='Calculate impressive diary statistics')
-stats_parser.add_argument('file')
+stats_parser.add_argument('file', nargs='?')
 def _stats_exec(args):
     print('Stats\n-----')
     stats(args)

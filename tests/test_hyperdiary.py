@@ -21,3 +21,7 @@ class TestHyperdiary(unittest.TestCase):
         diary = Diary.discover(in_test_folder('src'))
         diary.load_entries()
         self.assertGreaterEqual(len(diary.entries), 3)
+    
+    def test_missing_hyperdiary_json(self):
+        self.assertRaises(FileNotFoundError, Diary.discover,
+                          path=in_test_folder('.'))

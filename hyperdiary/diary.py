@@ -27,7 +27,7 @@ class Diary:
             path = path.parent
         hyperdiary_json_path = path / 'hyperdiary.json'
         if not hyperdiary_json_path.exists():
-            raise Exception('No hyperdiary.json found in any parent directories')
+            raise FileNotFoundError('No hyperdiary.json found in any parent directories')
         with open(str(hyperdiary_json_path), 'r') as f:
             hyperdiary_json = json.load(f)
             hyperdiary_json['sources'] = [str(path / f) for f in hyperdiary_json['sources']]

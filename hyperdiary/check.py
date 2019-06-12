@@ -1,8 +1,8 @@
 from datetime import date, timedelta
-from .diary import load_all
+from .diary import Diary
 
 def check():
-    entries = load_all().entries
+    entries = Diary.discover_and_load().entries
 
     current = date(2016,1,5)
     today = date.today()

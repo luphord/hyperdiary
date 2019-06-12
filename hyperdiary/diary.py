@@ -33,11 +33,12 @@ class Diary:
             hyperdiary_json['sources'] = [str(path / f) for f in hyperdiary_json['sources']]
             return Diary(hyperdiary_json)
     
+    @staticmethod
+    def discover_and_load(path='.'):
+        diary = Diary.discover(path)
+        diary.load_entries()
+        return diary
 
-def load_all():
-    diary = Diary.discover('.')
-    diary.load_entries()
-    return diary
 
 @enum.unique
 class EntryType(enum.Enum):

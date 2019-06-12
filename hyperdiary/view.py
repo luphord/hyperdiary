@@ -1,8 +1,8 @@
-from .diary import load_all
+from .diary import Diary
 from datetime import date, timedelta
 
 def view(date):
-    entries = load_all().entries
+    entries = Diary.discover_and_load().entries
     print(date)
     for line in entries[date]:
         print('- ' + str(line))

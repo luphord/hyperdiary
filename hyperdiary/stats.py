@@ -3,14 +3,14 @@ from sys import argv
 from argparse import ArgumentParser
 from collections import OrderedDict
 
-from .diary import find_tags, find_ids, iter_entries, load_all
+from .diary import find_tags, find_ids, iter_entries, Diary
 
 def stats(args):
     if args.file:
       with open(args.file) as f:
         y = yaml.load(f, Loader=yaml.SafeLoader)
     else:
-      y = load_all().entries
+      y = Diary.discover_and_load().entries
 
     output = OrderedDict()
     output['# Days'] = len(y)

@@ -5,8 +5,8 @@ from . import diary
 def nice_date(dt):
     return dt.strftime("%d.%m.%Y")
 
-def diary_to_tiddlers(tiddler_dir):
-    entries = diary.Diary.discover_and_load().entries
+def diary_to_tiddlers(diary_instance, tiddler_dir):
+    entries = diary_instance.entries
     os.makedirs(tiddler_dir, exist_ok=True)
 
     for current in sorted(entries.keys()):

@@ -5,8 +5,8 @@ from . import diary
 def nice_date(dt):
     return dt.strftime("%d.%m.%Y")
 
-def diary_to_hugo(fname):
-    entries = diary.Diary.discover_and_load().entries
+def diary_to_hugo(diary_instance, fname):
+    entries = diary_instance.entries
     content_dir = os.path.join(fname, 'content')
     os.makedirs(content_dir, exist_ok=True)
 

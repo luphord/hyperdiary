@@ -52,8 +52,8 @@ def wrap_html_page(content, title=None, level=0):
         inline_css = '.content { max-width: 800px; margin: auto; font-family: lato, sans-serif;} .tag { background-color: #ffeeaa;}'
     )
 
-def diary_to_html(fname):
-    entries = diary.Diary.discover_and_load().entries
+def diary_to_html(diary, fname):
+    entries = diary.entries
 
     content = div(h1('Entries'))
     entries_html = content.subelement(div())
@@ -63,8 +63,8 @@ def diary_to_html(fname):
 
     wrap_html_page(content, title='Diary').write(fname)
 
-def diary_to_html_folder(folder):
-    entries = diary.Diary.discover_and_load().entries
+def diary_to_html_folder(diary_instance, folder):
+    entries = diary_instance.entries
     dates = list(entries.keys())
     dates.sort()
 

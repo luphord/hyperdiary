@@ -6,8 +6,8 @@ import json
 from pathlib import Path
 
 class Diary:
-    def __init__(self, project):
-        for key, val in project.items():
+    def __init__(self, hyperdiary_json):
+        for key, val in hyperdiary_json.items():
             setattr(self, key, val)
         self.entries = None
     
@@ -19,21 +19,23 @@ class Diary:
                     if dt in self.entries:
                         raise Exception('Double definition for {0} in file {1}'.format(dt, fname))
                     self.entries[dt] = entry
-
-def load_project():
-    path = Path('.').resolve()
-    while not (path / 'hyperdiary.json').exists() and len(path.parts) > 1:
-        path = path.parent
-    project_json = path / 'hyperdiary.json'
-    if not project_json.exists():
-        raise Exception('No hyperdiary.json found in any parent directories')
-    with open(str(project_json), 'r') as f:
-        project = json.load(f)
-        project['sources'] = [str(path / f) for f in project['sources']]
-        return Diary(project)
+    
+    @staticmethod
+    def discover(path):
+        path = Path(path).resolve()
+        while not (path / 'hyperdiary.json').exists() and len(path.parts) > 1:
+            path = path.parent
+        hyperdiary_json_path = path / 'hyperdiary.json'
+        if not hyperdiary_json_path.exists():
+            raise Exception('No hyperdiary.json found in any parent directories')
+        with open(str(hyperdiary_json_path), 'r') as f:
+            hyperdiary_json = json.load(f)
+            hyperdiary_json['sources'] = [str(path / f) for f in hyperdiary_json['sources']]
+            return Diary(hyperdiary_json)
+    
 
 def load_all():
-    diary = load_project()
+    diary = Diary.discover('.')
     diary.load_entries()
     return diary
 

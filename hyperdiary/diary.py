@@ -173,9 +173,3 @@ def tokenize(line):
             yield next
     if text_token.text:
         yield text_token
-
-if __name__ == '__main__':
-    line = '+tag A $test-line by $Jane_Doe|Jane; expect no content +hallo'
-    print(find_tags(line))
-    print(find_ids(line))
-    print(list(tokenize(line)))

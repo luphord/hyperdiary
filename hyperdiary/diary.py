@@ -6,10 +6,19 @@ import json
 from pathlib import Path
 
 class Diary:
-    def __init__(self, project, entries):
+    def __init__(self, project):
         for key, val in project.items():
             setattr(self, key, val)
-        self.entries = entries
+        self.entries = None
+    
+    def load_entries(self):
+        self.entries = dict()
+        for fname in self.sources:
+            with open(fname) as f:
+                for dt, entry in yaml.load(f, Loader=yaml.SafeLoader).items():
+                    if dt in self.entries:
+                        raise Exception('Double definition for {0} in file {1}'.format(dt, fname))
+                    self.entries[dt] = entry
 
 def load_project():
     path = Path('.').resolve()
@@ -21,19 +30,12 @@ def load_project():
     with open(str(project_json), 'r') as f:
         project = json.load(f)
         project['sources'] = [str(path / f) for f in project['sources']]
-        return project
+        return Diary(project)
 
 def load_all():
-    entries = dict()
-    project = load_project()
-    for fname in project['sources']:
-        with open(fname) as f:
-            for dt, entry in yaml.load(f, Loader=yaml.SafeLoader).items():
-                if dt in entries:
-                    raise Exception('Double definition for {0} in file {1}'.format(dt, fname))
-                entries[dt] = entry
-    
-    return Diary(project, entries)
+    diary = load_project()
+    diary.load_entries()
+    return diary
 
 @enum.unique
 class EntryType(enum.Enum):

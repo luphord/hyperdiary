@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from .diary import Diary
 from .check import check
 from .stats import stats
 from .html import diary_to_html, diary_to_html_folder

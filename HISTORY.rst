@@ -7,6 +7,7 @@ History
 
 * stats subcommand can be invoked for all entries
 * Integrate Travis CI for automated testing
+* add basic tests
 
 0.1.2 (2019-06-11)
 ------------------

@@ -6,8 +6,9 @@ History
 ---------------
 
 * stats subcommand can be invoked for all entries
+* Rename `tiddlywiki` subcommand to `tiddlers` for different future usage
 * Integrate Travis CI for automated testing
-* add basic tests
+* Add basic tests
 
 0.1.2 (2019-06-11)
 ------------------

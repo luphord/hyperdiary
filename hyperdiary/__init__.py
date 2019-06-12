@@ -56,7 +56,7 @@ def _hugo_exec(args):
     diary_to_hugo(Diary.discover_and_load(diary_path), args.folder)
 hugo_parser.set_defaults(func=_hugo_exec)
 
-tiddler_parser = subparsers.add_parser('tiddlywiki', help='Export diary to tiddlywiki tiddlers format')
+tiddler_parser = subparsers.add_parser('tiddlers', help='Export diary to tiddlywiki tiddlers format')
 tiddler_parser.add_argument('folder')
 def _tiddlywiki_exec(args):
     print('Exporting diary in tiddlywiki tiddlers format to {}'.format(args.folder))

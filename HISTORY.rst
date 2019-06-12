@@ -2,13 +2,14 @@
 History
 =======
 
-0.2.0 (not yet)
----------------
+0.2.0 (2019-06-12)
+------------------
 
 * stats subcommand can be invoked for all entries
 * Rename `tiddlywiki` subcommand to `tiddlers` for different future usage
 * Integrate Travis CI for automated testing
 * Add basic tests
+* Refactor diary/entry passing to subcommands
 
 0.1.2 (2019-06-11)
 ------------------

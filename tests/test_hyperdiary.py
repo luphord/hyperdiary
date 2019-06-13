@@ -9,6 +9,7 @@ from tempfile import TemporaryDirectory
 from hyperdiary import parser, Diary
 from hyperdiary.diary import find_ids, find_tags, tokenize
 from hyperdiary.check import check
+from hyperdiary.stats import stats
 from hyperdiary.html import diary_to_html, diary_to_html_folder
 from hyperdiary.tiddlywiki import diary_to_tiddlers
 from hyperdiary.hugo import diary_to_hugo
@@ -32,6 +33,9 @@ class TestHyperdiary(unittest.TestCase):
     
     def test_check(self):
         check(self.diary)
+    
+    def test_stats(self):
+        self.assertGreater(len(stats(self.diary.entries)), 3)
     
     def test_missing_hyperdiary_json(self):
         self.assertRaises(FileNotFoundError, Diary.discover,

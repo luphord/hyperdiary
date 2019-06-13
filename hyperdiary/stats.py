@@ -13,4 +13,6 @@ def stats(entries):
     output['# Identification'] = sum(len(find_ids(l)) for d, l, t in iter_entries(entries))
 
     for key, val in output.items():
-      print('{:.<20}{:.>5}'.format(key, val))
+        print('{:.<20}{:.>5}'.format(key, val))
+
+    return output

@@ -1,14 +1,18 @@
 import re, enum
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import namedtuple
 import yaml
 import json
 from pathlib import Path
 
+
 class Diary:
     def __init__(self, hyperdiary_json):
         for key, val in hyperdiary_json.items():
             setattr(self, key, val)
+        if not hasattr(self, 'expected'):
+            self.expected = expected
+        self.expected = [DateRange.from_json(obj) for obj in self.expected]
         self.entries = None
     
     def load_entries(self):
@@ -40,11 +44,36 @@ class Diary:
         return diary
 
 
+class DateRange:
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+    
+    def __iter__(self):
+        current = self.start
+        one_day = timedelta(days=1)
+        while current <= self.end:
+            yield current
+            current += one_day
+    
+    @staticmethod
+    def from_json(obj):
+        if not 'start' in obj:
+            raise KeyError('"start" is required in an expected date range')
+        start = datetime.strptime(obj['start'], '%Y-%m-%d').date()
+        if 'end' in obj:
+            end = datetime.strptime(obj['end'], '%Y-%m-%d').date()
+        else:
+            end = datetime.today().date()
+        return DateRange(start, end)
+
+
 @enum.unique
 class EntryType(enum.Enum):
     Line = 1
     Dict = 2
     DictLine = 3
+
 
 def iter_entries(yml):
     for date, entries in yml.items():
@@ -58,6 +87,7 @@ def iter_entries(yml):
                     for l in v:
                         yield (date, l, EntryType.DictLine)
 
+
 def find_tags(line):
     '''
     >>> res = [t.text for t in find_tags("+tag1 +tag2 some content goes here +tag3")]
@@ -66,11 +96,14 @@ def find_tags(line):
     '''
     return find(line, TokenType.Tag)
 
+
 def find_ids(line):
     return find(line, TokenType.Id)
 
+
 def find(line, token_type):
     return [token for token in tokenize(line) if token.type == token_type]
+
 
 @enum.unique
 class TokenType(enum.Enum):
@@ -87,12 +120,15 @@ _REPLACEMENTS = {
     'ß': 'ss',
     '\'': ''
 }
+
+
 def make_id(sid):
     sid = sid.lower()
     for k, v in _REPLACEMENTS.items():
         sid = sid.replace(k, v)
     assert not ' ' in sid, sid
     return sid
+
 
 def _capitalize(s):
     up = True
@@ -104,8 +140,11 @@ def _capitalize(s):
             if l == ' ':
                 up = True
             yield l
+
+
 def beautify_id(sid):
     return ''.join(_capitalize(sid.replace('_', ' ')))
+
 
 class Token:
     def __init__(self, type, text, ref=None):
@@ -136,7 +175,10 @@ class Token:
     def __lt__(self, other):
         return self.text < other.text
 
+
 re_separator = re.compile(' |;|,|\\.')
+
+
 def _fragmented_tokenize(line):
     current = []
     current_type = TokenType.Text

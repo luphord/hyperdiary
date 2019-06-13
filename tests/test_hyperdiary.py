@@ -8,7 +8,7 @@ from tempfile import TemporaryDirectory
 
 from hyperdiary import parser, Diary
 from hyperdiary.diary import find_ids, find_tags, tokenize
-from hyperdiary.html import diary_to_html
+from hyperdiary.html import diary_to_html, diary_to_html_folder
 
 
 def in_test_folder(relative_path):
@@ -44,4 +44,9 @@ class TestHyperdiary(unittest.TestCase):
             self.assertTrue(outfname.exists())
             with open(str(outfname), 'r') as f:
                 self.assertGreater(len(f.read()), 0)
-
+    
+    def test_htmlfolder_export(self):
+        with TemporaryDirectory() as folder:
+            diary_to_html_folder(self.diary, folder)
+            folder = Path(folder)
+            self.assertGreater(len(list(folder.iterdir())), 0)

@@ -10,6 +10,7 @@ from hyperdiary import parser, Diary
 from hyperdiary.diary import find_ids, find_tags, tokenize
 from hyperdiary.html import diary_to_html, diary_to_html_folder
 from hyperdiary.tiddlywiki import diary_to_tiddlers
+from hyperdiary.hugo import diary_to_hugo
 
 
 def in_test_folder(relative_path):
@@ -37,7 +38,7 @@ class TestHyperdiary(unittest.TestCase):
         self.assertEqual(2, len(find_tags(line)))
         self.assertEqual(2, len(find_ids(line)))
         self.assertEqual(7, len(list(tokenize(line))))
-    
+
     def test_html_export(self):
         with TemporaryDirectory() as folder:
             outfname = Path(folder) / 'out.html'
@@ -45,15 +46,21 @@ class TestHyperdiary(unittest.TestCase):
             self.assertTrue(outfname.exists())
             with open(str(outfname), 'r') as f:
                 self.assertGreater(len(f.read()), 0)
-    
+
     def test_htmlfolder_export(self):
         with TemporaryDirectory() as folder:
             diary_to_html_folder(self.diary, folder)
             folder = Path(folder)
             self.assertGreater(len(list(folder.iterdir())), 0)
-    
+
     def test_tiddlers_export(self):
         with TemporaryDirectory() as folder:
             diary_to_tiddlers(self.diary, folder)
+            folder = Path(folder)
+            self.assertGreater(len(list(folder.iterdir())), 0)
+
+    def test_hugo_export(self):
+        with TemporaryDirectory() as folder:
+            diary_to_hugo(self.diary, folder)
             folder = Path(folder)
             self.assertGreater(len(list(folder.iterdir())), 0)

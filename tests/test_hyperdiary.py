@@ -4,9 +4,11 @@
 
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from hyperdiary import parser, Diary
 from hyperdiary.diary import find_ids, find_tags, tokenize
+from hyperdiary.html import diary_to_html
 
 
 def in_test_folder(relative_path):
@@ -15,13 +17,15 @@ def in_test_folder(relative_path):
 
 class TestHyperdiary(unittest.TestCase):
 
+    def setUp(self):
+        self.diary = Diary.discover(in_test_folder('src'))
+        self.diary.load_entries()
+
     def test_command_line_interface(self):
         self.assertEqual('check', parser.parse_args(['check']).subcommand)
     
     def test_loading_of_entries(self):
-        diary = Diary.discover(in_test_folder('src'))
-        diary.load_entries()
-        self.assertGreaterEqual(len(diary.entries), 3)
+        self.assertGreaterEqual(len(self.diary.entries), 3)
     
     def test_missing_hyperdiary_json(self):
         self.assertRaises(FileNotFoundError, Diary.discover,
@@ -32,3 +36,12 @@ class TestHyperdiary(unittest.TestCase):
         self.assertEqual(2, len(find_tags(line)))
         self.assertEqual(2, len(find_ids(line)))
         self.assertEqual(7, len(list(tokenize(line))))
+    
+    def test_html_export(self):
+        with TemporaryDirectory() as folder:
+            outfname = Path(folder) / 'out.html'
+            diary_to_html(self.diary, str(outfname))
+            self.assertTrue(outfname.exists())
+            with open(str(outfname), 'r') as f:
+                self.assertGreater(len(f.read()), 0)
+

@@ -2,6 +2,11 @@
 History
 =======
 
+0.3.0 (not yet)
+---------------
+
+* Tests for various output formats
+
 0.2.0 (2019-06-12)
 ------------------
 

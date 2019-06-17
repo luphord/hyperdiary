@@ -68,11 +68,15 @@ def nice_date(dt):
     return dt.strftime("%d.%m.%Y")
 
 
-def diary_to_tiddlers_export(diary_instance, tiddler_dir):
+def diary_to_tiddlers(diary_instance):
     entries = diary_instance.entries
-    os.makedirs(tiddler_dir, exist_ok=True)
+    for dt in sorted(entries.keys()):
+        yield dt, Tiddler.from_entry(dt, entries[dt])
 
-    for current in sorted(entries.keys()):
-        tiddler = Tiddler.from_entry(current, entries[current])
-        with open(os.path.join(tiddler_dir, '{:04d}-{:02d}-{:02d}.tid'.format(current.year, current.month, current.day)), 'w') as f:
+
+def diary_to_tiddlers_export(diary_instance, tiddler_dir):
+    os.makedirs(tiddler_dir, exist_ok=True)
+    for dt, tiddler in diary_to_tiddlers(diary_instance):
+        fname = '{:04d}-{:02d}-{:02d}.tid'.format(dt.year, dt.month, dt.day)
+        with open(os.path.join(tiddler_dir, fname), 'w') as f:
             f.write(tiddler.to_tid())

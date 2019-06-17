@@ -33,7 +33,7 @@ class Tiddler:
     
     def to_div(self):
         args = ' '.join(['{}="{}"'.format(k, v) for k, v in self._fields_without_text()])
-        return '<div {}>\n<pre>\n{0}\n</pre>\n</div>'.format(args, self.text)
+        return '<div {}>\n<pre>\n{}\n</pre>\n</div>'.format(args, self.text)
     
     @staticmethod
     def from_entry(dt, entry):

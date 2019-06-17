@@ -10,7 +10,7 @@ from hyperdiary.diary import find_ids, find_tags, tokenize
 from hyperdiary.check import check
 from hyperdiary.stats import stats
 from hyperdiary.html import diary_to_html, diary_to_html_folder
-from hyperdiary.tiddlywiki import diary_to_tiddlers
+from hyperdiary.tiddlywiki import diary_to_tiddlers_export
 from hyperdiary.hugo import diary_to_hugo
 
 
@@ -62,7 +62,7 @@ class TestHyperdiary(unittest.TestCase):
 
     def test_tiddlers_export(self):
         with TemporaryDirectory() as folder:
-            diary_to_tiddlers(self.diary, folder)
+            diary_to_tiddlers_export(self.diary, folder)
             folder = Path(folder)
             self.assertGreater(len(list(folder.iterdir())), 0)
 

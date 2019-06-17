@@ -31,6 +31,10 @@ class Tiddler:
             + '\ntype: text/vnd.tiddlywik\n\n' \
             + self.text
     
+    def to_div(self):
+        args = ' '.join(['{}="{}"'.format(k, v) for k, v in self._fields_without_text()])
+        return '<div {}>\n<pre>\n{0}\n</pre>\n</div>'.format(args, self.text)
+    
     @staticmethod
     def from_entry(dt, entry):
         tags = []
@@ -64,7 +68,7 @@ def nice_date(dt):
     return dt.strftime("%d.%m.%Y")
 
 
-def diary_to_tiddlers(diary_instance, tiddler_dir):
+def diary_to_tiddlers_export(diary_instance, tiddler_dir):
     entries = diary_instance.entries
     os.makedirs(tiddler_dir, exist_ok=True)
 

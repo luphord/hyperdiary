@@ -8,7 +8,7 @@ from .check import check
 from .stats import stats
 from .html import diary_to_html, diary_to_html_folder
 from .hugo import diary_to_hugo
-from .tiddlywiki import diary_to_tiddlers
+from .tiddlywiki import diary_to_tiddlers_export
 from .view import view
 
 diary_path = '.'
@@ -60,7 +60,7 @@ tiddler_parser = subparsers.add_parser('tiddlers', help='Export diary to tiddlyw
 tiddler_parser.add_argument('folder')
 def _tiddlywiki_exec(args):
     print('Exporting diary in tiddlywiki tiddlers format to {}'.format(args.folder))
-    diary_to_tiddlers(Diary.discover_and_load(diary_path), args.folder)
+    diary_to_tiddlers_export(Diary.discover_and_load(diary_path), args.folder)
 tiddler_parser.set_defaults(func=_tiddlywiki_exec)
 
 view_parser = subparsers.add_parser('view', help='View entries on command line')

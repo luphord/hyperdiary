@@ -10,7 +10,8 @@ from hyperdiary.diary import find_ids, find_tags, tokenize
 from hyperdiary.check import check
 from hyperdiary.stats import stats
 from hyperdiary.html import diary_to_html, diary_to_html_folder
-from hyperdiary.tiddlywiki import diary_to_tiddlers, diary_to_tiddlers_export
+from hyperdiary.tiddlywiki import diary_to_tiddlers, \
+    diary_to_tiddlers_export, diary_to_tiddlywiki_export
 from hyperdiary.hugo import diary_to_hugo
 
 
@@ -65,6 +66,23 @@ class TestHyperdiary(unittest.TestCase):
             diary_to_tiddlers_export(self.diary, folder)
             folder = Path(folder)
             self.assertGreater(len(list(folder.iterdir())), 0)
+    
+    def test_tiddywiki_export(self):
+        tiddlywiki = 'tiddlywiki_mock.html'
+        with TemporaryDirectory() as folder:
+            folder = Path(folder)
+            tiddlywiki_path = folder / tiddlywiki
+            outfname = folder / 'out.html'
+            with open(str(tiddlywiki_path), 'w') as f:
+                f.write('---\n---\n')  # no "storeArea"
+            self.assertRaises(Exception, diary_to_tiddlywiki_export,
+                              diary_instance=self.diary, file=str(outfname),
+                              tiddlywiki_base_file=str(tiddlywiki_path))
+            with open(str(tiddlywiki_path), 'w') as f:
+                f.write('---\nid="storeArea"\n---\n')
+            diary_to_tiddlywiki_export(self.diary, str(outfname),
+                                       str(tiddlywiki_path))
+            self.assertGreater(len(list(folder.iterdir())), 1)
     
     def test_tiddler_serialization(self):
         for dt, tiddler in diary_to_tiddlers(self.diary):

@@ -2,10 +2,11 @@
 History
 =======
 
-0.3.0 (not yet)
----------------
+0.3.0 (2019-06-19)
+------------------
 
 * Expected date ranges for check subcommand can be specified
+* subcommand for export to tiddlywiki
 * Tests for various output formats
 
 0.2.0 (2019-06-12)

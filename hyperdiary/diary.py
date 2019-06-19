@@ -11,7 +11,7 @@ class Diary:
         for key, val in hyperdiary_json.items():
             setattr(self, key, val)
         if not hasattr(self, 'expected'):
-            self.expected = expected
+            self.expected = []
         self.expected = [DateRange.from_json(obj) for obj in self.expected]
         self.entries = None
     

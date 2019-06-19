@@ -31,6 +31,9 @@ class TestHyperdiary(unittest.TestCase):
     def test_loading_of_entries(self):
         self.assertGreaterEqual(len(self.diary.entries), 3)
     
+    def test_diary_without_expected(self):
+        Diary({})
+    
     def test_check(self):
         check(self.diary)
     

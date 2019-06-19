@@ -8,7 +8,7 @@ from .check import check
 from .stats import stats
 from .html import diary_to_html, diary_to_html_folder
 from .hugo import diary_to_hugo
-from .tiddlywiki import diary_to_tiddlers_export
+from .tiddlywiki import diary_to_tiddlers_export, diary_to_tiddlywiki_export
 from .view import view
 
 diary_path = '.'
@@ -58,10 +58,22 @@ hugo_parser.set_defaults(func=_hugo_exec)
 
 tiddler_parser = subparsers.add_parser('tiddlers', help='Export diary to tiddlywiki tiddlers format')
 tiddler_parser.add_argument('folder')
-def _tiddlywiki_exec(args):
+def _tiddlers_exec(args):
     print('Exporting diary in tiddlywiki tiddlers format to {}'.format(args.folder))
     diary_to_tiddlers_export(Diary.discover_and_load(diary_path), args.folder)
-tiddler_parser.set_defaults(func=_tiddlywiki_exec)
+tiddler_parser.set_defaults(func=_tiddlers_exec)
+
+tiddlywiki_parser = subparsers.add_parser('tiddlywiki', help='Export diary to tiddlywiki')
+tiddlywiki_parser.add_argument('-t', '--tiddlywiki-base-file',
+                               help='path to tiddlywiki base file to copy for export',
+                               default='empty.html', type=str)
+tiddlywiki_parser.add_argument('file')
+def _tiddlywiki_exec(args):
+    print('Exporting diary to tiddlywiki as {} with tiddlywiki base file {}' \
+          .format(args.file, args.tiddlywiki_base_file))
+    diary_to_tiddlywiki_export(Diary.discover_and_load(diary_path),
+                               args.file, args.tiddlywiki_base_file)
+tiddlywiki_parser.set_defaults(func=_tiddlywiki_exec)
 
 view_parser = subparsers.add_parser('view', help='View entries on command line')
 def parse_date(sdate):

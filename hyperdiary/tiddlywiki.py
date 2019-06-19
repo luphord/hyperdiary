@@ -80,3 +80,19 @@ def diary_to_tiddlers_export(diary_instance, tiddler_dir):
         fname = '{:04d}-{:02d}-{:02d}.tid'.format(dt.year, dt.month, dt.day)
         with open(os.path.join(tiddler_dir, fname), 'w') as f:
             f.write(tiddler.to_tid())
+
+_STORE_AREA_SENTINEL = 'id="storeArea"'
+
+def diary_to_tiddlywiki_export(diary_instance, file, tiddlywiki_base_file):
+    content = '\n'.join(tiddler.to_div() for dt, tiddler in diary_to_tiddlers(diary_instance))
+    sentinel_found = False
+    with open(file, 'w') as f, open(tiddlywiki_base_file, 'r') as wiki:
+        for line in wiki:
+            f.write(line)
+            if _STORE_AREA_SENTINEL in line:
+                f.write(content)
+                sentinel_found = True
+    if not sentinel_found:
+        raise Exception('Could not find \'{}\' in file {}' \
+                        .format(_STORE_AREA_SENTINEL, tiddlywiki_base_file))
+            

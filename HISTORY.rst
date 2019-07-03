@@ -2,6 +2,12 @@
 History
 =======
 
+0.3.1 (2019-07-03)
+------------------
+
+* open date ranges iterate until yesterday, not today
+* fix loading hyperdiary.json without expected field
+
 0.3.0 (2019-06-19)
 ------------------
 

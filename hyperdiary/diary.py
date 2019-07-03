@@ -64,7 +64,7 @@ class DateRange:
         if 'end' in obj:
             end = datetime.strptime(obj['end'], '%Y-%m-%d').date()
         else:
-            end = datetime.today().date()
+            end = datetime.today().date() - timedelta(days=1)
         return DateRange(start, end)
 
 

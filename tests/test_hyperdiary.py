@@ -27,19 +27,19 @@ class TestHyperdiary(unittest.TestCase):
 
     def test_command_line_interface(self):
         self.assertEqual('check', parser.parse_args(['check']).subcommand)
-    
+
     def test_loading_of_entries(self):
         self.assertGreaterEqual(len(self.diary.entries), 3)
-    
+
     def test_diary_without_expected(self):
         Diary({})
-    
+
     def test_check(self):
         check(self.diary)
-    
+
     def test_stats(self):
         self.assertGreater(len(stats(self.diary.entries)), 3)
-    
+
     def test_missing_hyperdiary_json(self):
         self.assertRaises(FileNotFoundError, Diary.discover,
                           path=in_test_folder('.'))
@@ -69,7 +69,7 @@ class TestHyperdiary(unittest.TestCase):
             diary_to_tiddlers_export(self.diary, folder)
             folder = Path(folder)
             self.assertGreater(len(list(folder.iterdir())), 0)
-    
+
     def test_tiddywiki_export(self):
         tiddlywiki = 'tiddlywiki_mock.html'
         with TemporaryDirectory() as folder:
@@ -86,7 +86,7 @@ class TestHyperdiary(unittest.TestCase):
             diary_to_tiddlywiki_export(self.diary, str(outfname),
                                        str(tiddlywiki_path))
             self.assertGreater(len(list(folder.iterdir())), 1)
-    
+
     def test_tiddler_serialization(self):
         for dt, tiddler in diary_to_tiddlers(self.diary):
             self.assertGreater(len(tiddler.to_tid()), 0)

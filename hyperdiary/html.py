@@ -4,8 +4,23 @@ from itertools import groupby
 from collections import defaultdict
 from . import diary
 from .simplepath import AbsolutePath, RelativePath
-from .htmltags import article, header, h1, h4, ul, li, a, span, div, footer, \
-    wrap_page
+from .htmltags import article, header, head, h1, h4, ul, li, a, span, div, \
+    footer, meta, link, style, html, body, title
+
+
+def wrap_page(body_content, page_title=None, encoding='utf-8',
+              css_references=[], inline_css=None):
+    h = head(
+            meta(charset=encoding),
+            meta(name='viewport', content='width=device-width, initial-scale=1')
+        )
+    if page_title:
+        h.append(title(page_title))
+    for css in css_references:
+        h.append(link(href=css, rel="stylesheet"))
+    if inline_css:
+        h.append(style(inline_css))
+    return html(h, body(body_content))
 
 
 def nice_date(dt):

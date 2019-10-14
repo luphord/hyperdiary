@@ -1,6 +1,32 @@
 import os
 import io
+import re
+import unicodedata
 from . import diary
+
+
+def make_tiddler_filename(o):
+    '''
+    >>> make_tiddler_filename("Frühstück Ähre Grüße Föhn")
+    'fruehstueck-aehre-gruesse-foehn.tid'
+    >>> make_tiddler_filename("a.v-_'üöß' tiddler")
+    'av-_ueoess-tiddler.tid'
+    '''
+    if isinstance(o, str):
+        s = o.lower() \
+             .replace('ß', 'ss') \
+             .replace('ä', 'ae') \
+             .replace('ö', 'oe') \
+             .replace('ü', 'ue')
+        s = unicodedata.normalize('NFKD', s)
+        s = s.encode('ascii', 'ignore').decode('ascii')
+        s = re.sub('[^\w\s-]', '', s).strip()
+        s = re.sub('[-\s]+', '-', s)
+    else:
+        raise NotImplementedError('Cannot convert object of type ' \
+                                  '{} to filename'.format(type(o)))
+    return '{}.tid'.format(s)
+
 
 class Tiddler:
     def __init__(self, **fields):

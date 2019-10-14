@@ -1,13 +1,15 @@
 _escaped_attrs = ('id', 'class', 'type')
-_html_tags = ('html', 'head', 'title', 'meta', 'link', 'style', \
-              'body', 'div', 'nav', 'span', 'article', 'header', 'footer', 'a', 'p', \
-              'h1', 'h2', 'h3', 'h4', \
-              'small', 'hr', 'ul', 'ol', 'li', 'img', \
-              'table', 'thead', 'tbody', 'tr', 'td', 'th', \
+_html_tags = ('html', 'head', 'title', 'meta', 'link', 'style',
+              'body', 'div', 'nav', 'span', 'article', 'header', 'footer',
+              'a', 'p',
+              'h1', 'h2', 'h3', 'h4',
+              'small', 'hr', 'ul', 'ol', 'li', 'img',
+              'table', 'thead', 'tbody', 'tr', 'td', 'th',
               'form', 'button')
-_render_compact_tags = ('p', 'span', 'a', 'b', 'i', 'small', 'li', \
-                        'h1', 'h2', 'h3', 'h4', \
+_render_compact_tags = ('p', 'span', 'a', 'b', 'i', 'small', 'li',
+                        'h1', 'h2', 'h3', 'h4',
                         'button', 'ht', 'td', 'title')
+
 
 class HTMLElement(object):
     tag = 'div'
@@ -43,7 +45,7 @@ class HTMLElement(object):
         is_doc_root = self.tag.lower() == 'html'
         if is_doc_root:
             yield '<!DOCTYPE HTML>\n'
-        do_linebreak = not self.tag in _render_compact_tags and self.content
+        do_linebreak = self.tag not in _render_compact_tags and self.content
         yield indent
         yield '<'
         yield self.tag
@@ -77,10 +79,13 @@ class HTMLElement(object):
             for s in self.lazy_render(add_indent='  '):
                 f.write(s)
 
+
 for tag in _html_tags:
     locals()[tag.lower()] = type(tag.lower(), (HTMLElement,), dict(tag=tag))
 
-def wrap_page(body_content, page_title=None, encoding='utf-8', css_references=[], inline_css=None):
+
+def wrap_page(body_content, page_title=None, encoding='utf-8',
+              css_references=[], inline_css=None):
     h = head(
             meta(charset=encoding),
             meta(name='viewport', content='width=device-width, initial-scale=1')
@@ -93,10 +98,12 @@ def wrap_page(body_content, page_title=None, encoding='utf-8', css_references=[]
         h.append(style(inline_css))
     return html(h, body(body_content))
 
+
 mycss = \
-"""body {
-  padding-top: 60px;
-}"""
+    """body {
+    padding-top: 60px;
+    }"""
+
 if __name__ == '__main__':
     content = div(
             p('Hello World'),
@@ -109,5 +116,7 @@ if __name__ == '__main__':
             ),
             div(div(p('hello')), 'text', span('world'))
         )
-    page = wrap_page(content, page_title='My test page', css_references=["assets/css/bootstrap.min.css"], inline_css=mycss)
+    page = wrap_page(content, page_title='My test page',
+                     css_references=["assets/css/bootstrap.min.css"],
+                     inline_css=mycss)
     print(page)

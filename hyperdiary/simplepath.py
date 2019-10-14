@@ -1,16 +1,23 @@
 from typing import Iterable, List
 
+
 class InvalidPathError(Exception):
     pass
+
 
 class NotARelativePathError(InvalidPathError):
     pass
 
+
 class NotAnAbsolutePathError(InvalidPathError):
     pass
 
+
 _valid_path_chars = 'abcdefghijklmnopqrstuvwxyz0123456789-_.'
-def _validate_and_shorten(is_absolute: bool, elements: Iterable[str]) -> List[str]:
+
+
+def _validate_and_shorten(is_absolute: bool, elements: Iterable[str]) \
+        -> List[str]:
     '''
     >>> _validate_and_shorten(True, ['a', 'b', 'c', '..', '..'])
     ['a']
@@ -41,7 +48,7 @@ def _validate_and_shorten(is_absolute: bool, elements: Iterable[str]) -> List[st
     >>> _validate_and_shorten(False, ['.'])
     []
     '''
-    new_elements = [] # type: List[str]
+    new_elements = []  # type: List[str]
     for el in elements:
         if el == '.' or not el:
             continue
@@ -58,9 +65,11 @@ def _validate_and_shorten(is_absolute: bool, elements: Iterable[str]) -> List[st
                     new_elements.pop()
         else:
             if not all(c in _valid_path_chars for c in el):
-                raise InvalidPathError('invalid character in path element "{}"'.format(el))
+                raise InvalidPathError('invalid character in path element "{}"'
+                                       .format(el))
             new_elements.append(el)
     return new_elements
+
 
 class RelativePath:
     def __init__(self, path: str) -> None:
@@ -146,7 +155,8 @@ class AbsolutePath:
             return False
         if not len(self.elements) == len(other.elements):
             return False
-        return all(el1 == el2 for el1, el2 in zip(self.elements, other.elements))
+        return all(el1 == el2 for el1, el2 in zip(self.elements,
+                                                  other.elements))
 
     def __add__(self, other: RelativePath) -> 'AbsolutePath':
         '''
@@ -164,7 +174,8 @@ class AbsolutePath:
             ...
         hyperdiary.simplepath.InvalidPathError: traversing over root
 
-        >>> AbsolutePath('/a/b/c/././') + RelativePath('../../../x/y') == AbsolutePath('/x/y')
+        >>> AbsolutePath('/a/b/c/././') + RelativePath('../../../x/y') \
+            == AbsolutePath('/x/y')
         True
         '''
         return AbsolutePath('{}/{}'.format(self, other))

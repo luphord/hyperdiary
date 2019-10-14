@@ -63,7 +63,7 @@ coverage: ## check code coverage quickly with the default Python
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/imgwrench.rst
+	rm -f docs/hyperdiary.rst
 	rm -f docs/modules.rst
 	sphinx-apidoc -o docs/ imgwrench
 	$(MAKE) -C docs clean

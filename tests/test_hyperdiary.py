@@ -15,6 +15,9 @@ from hyperdiary.tiddlywiki import diary_to_tiddlers, \
 from hyperdiary.hugo import diary_to_hugo
 
 
+EXPECTED_TIDDLER_NAMES = {'2019-06-09.tid', '2019-05-01.tid', '2019-06-10.tid'}
+
+
 def in_test_folder(relative_path):
     return Path(__file__).parent / relative_path
 
@@ -68,7 +71,10 @@ class TestHyperdiary(unittest.TestCase):
         with TemporaryDirectory() as folder:
             diary_to_tiddlers_export(self.diary, folder)
             folder = Path(folder)
-            self.assertGreater(len(list(folder.iterdir())), 0)
+            files = set(f.name for f in folder.iterdir())
+            self.assertGreater(len(files), 0)
+            for fname in EXPECTED_TIDDLER_NAMES:
+                self.assertIn(fname, files)
 
     def test_tiddywiki_export(self):
         tiddlywiki = 'tiddlywiki_mock.html'

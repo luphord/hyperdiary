@@ -147,7 +147,8 @@ def main():
         args = parser.parse_args()
         args.func(args)
     except Exception as e:
-        import sys, traceback
+        import sys
+        import traceback
         tb = sys.exc_info()[2]
         RED = ''
         try:

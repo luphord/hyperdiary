@@ -12,7 +12,8 @@ def wrap_page(body_content, page_title=None, encoding='utf-8',
               css_references=[], inline_css=None):
     h = head(
             meta(charset=encoding),
-            meta(name='viewport', content='width=device-width, initial-scale=1')
+            meta(name='viewport',
+                 content='width=device-width, initial-scale=1')
         )
     if page_title:
         h.append(title(page_title))

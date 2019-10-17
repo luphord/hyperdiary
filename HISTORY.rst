@@ -7,6 +7,7 @@ History
 
 * fix linter configuration (and activate it)
 * make all hyperdiary source files PEP8 conform
+* set up bumpversion config
 
 0.3.1 (2019-07-03)
 ------------------

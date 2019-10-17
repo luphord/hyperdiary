@@ -2,6 +2,12 @@
 History
 =======
 
+0.3.2 (2019-10-17)
+------------------
+
+* fix linter configuration (and activate it)
+* make all hyperdiary source files PEP8 conform
+
 0.3.1 (2019-07-03)
 ------------------
 

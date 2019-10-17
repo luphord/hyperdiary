@@ -2,6 +2,7 @@ import os
 import io
 import re
 import unicodedata
+from datetime import date
 from . import diary
 
 
@@ -11,6 +12,8 @@ def make_tiddler_filename(o):
     'fruehstueck-aehre-gruesse-foehn.tid'
     >>> make_tiddler_filename("a.v-_'üöß' tiddler")
     'av-_ueoess-tiddler.tid'
+    >>> make_tiddler_filename(date(2019, 2, 3))
+    '2019-02-03.tid'
     '''
     if isinstance(o, str):
         s = o.lower() \
@@ -22,6 +25,8 @@ def make_tiddler_filename(o):
         s = s.encode('ascii', 'ignore').decode('ascii')
         s = re.sub('[^\w\s-]', '', s).strip()
         s = re.sub('[-\s]+', '-', s)
+    elif isinstance(o, date):
+        s = '{:04d}-{:02d}-{:02d}'.format(o.year, o.month, o.day)
     else:
         raise NotImplementedError('Cannot convert object of type '
                                   '{} to filename'.format(type(o)))
@@ -29,7 +34,8 @@ def make_tiddler_filename(o):
 
 
 class Tiddler:
-    def __init__(self, **fields):
+    def __init__(self, fname, **fields):
+        self.fname = fname
         self.fields = dict(**fields)
 
     @property
@@ -89,7 +95,7 @@ class Tiddler:
                       created=compact_date,
                       modified=compact_date)
 
-        return Tiddler(**fields)
+        return Tiddler(make_tiddler_filename(dt), **fields)
 
 
 def nice_date(dt):
@@ -105,8 +111,7 @@ def diary_to_tiddlers(diary_instance):
 def diary_to_tiddlers_export(diary_instance, tiddler_dir):
     os.makedirs(tiddler_dir, exist_ok=True)
     for dt, tiddler in diary_to_tiddlers(diary_instance):
-        fname = '{:04d}-{:02d}-{:02d}.tid'.format(dt.year, dt.month, dt.day)
-        with open(os.path.join(tiddler_dir, fname), 'w') as f:
+        with open(os.path.join(tiddler_dir, tiddler.fname), 'w') as f:
             f.write(tiddler.to_tid())
 
 

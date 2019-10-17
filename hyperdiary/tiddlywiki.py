@@ -105,12 +105,12 @@ def nice_date(dt):
 def diary_to_tiddlers(diary_instance):
     entries = diary_instance.entries
     for dt in sorted(entries.keys()):
-        yield dt, Tiddler.from_entry(dt, entries[dt])
+        yield Tiddler.from_entry(dt, entries[dt])
 
 
 def diary_to_tiddlers_export(diary_instance, tiddler_dir):
     os.makedirs(tiddler_dir, exist_ok=True)
-    for dt, tiddler in diary_to_tiddlers(diary_instance):
+    for tiddler in diary_to_tiddlers(diary_instance):
         with open(os.path.join(tiddler_dir, tiddler.fname), 'w') as f:
             f.write(tiddler.to_tid())
 
@@ -119,7 +119,7 @@ _STORE_AREA_SENTINEL = 'id="storeArea"'
 
 
 def diary_to_tiddlywiki_export(diary_instance, file, tiddlywiki_base_file):
-    content = '\n'.join(tiddler.to_div() for dt, tiddler in
+    content = '\n'.join(tiddler.to_div() for tiddler in
                         diary_to_tiddlers(diary_instance))
     sentinel_found = False
     with open(file, 'w') as f, open(tiddlywiki_base_file, 'r') as wiki:

@@ -94,7 +94,7 @@ class TestHyperdiary(unittest.TestCase):
             self.assertGreater(len(list(folder.iterdir())), 1)
 
     def test_tiddler_serialization(self):
-        for dt, tiddler in diary_to_tiddlers(self.diary):
+        for tiddler in diary_to_tiddlers(self.diary):
             self.assertGreater(len(tiddler.to_tid()), 0)
             self.assertGreater(len(tiddler.to_div()), 0)
 

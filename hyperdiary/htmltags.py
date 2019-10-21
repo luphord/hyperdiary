@@ -1,11 +1,5 @@
 _escaped_attrs = ('id', 'class', 'type')
-_html_tags = ('html', 'head', 'title', 'meta', 'link', 'style',
-              'body', 'div', 'nav', 'span', 'article', 'header', 'footer',
-              'a', 'p',
-              'h1', 'h2', 'h3', 'h4',
-              'small', 'hr', 'ul', 'ol', 'li', 'img',
-              'table', 'thead', 'tbody', 'tr', 'td', 'th',
-              'form', 'button')
+
 _render_compact_tags = ('p', 'span', 'a', 'b', 'i', 'small', 'li',
                         'h1', 'h2', 'h3', 'h4',
                         'button', 'ht', 'td', 'title')
@@ -80,5 +74,135 @@ class HTMLElement(object):
                 f.write(s)
 
 
-for tag in _html_tags:
-    locals()[tag.lower()] = type(tag.lower(), (HTMLElement,), dict(tag=tag))
+# TAGS
+
+class a (HTMLElement):
+    tag = 'a'
+
+
+class article (HTMLElement):
+    tag = 'article'
+
+
+class body (HTMLElement):
+    tag = 'body'
+
+
+class button (HTMLElement):
+    tag = 'button'
+
+
+class div (HTMLElement):
+    tag = 'div'
+
+
+class footer (HTMLElement):
+    tag = 'footer'
+
+
+class form (HTMLElement):
+    tag = 'form'
+
+
+class h1 (HTMLElement):
+    tag = 'h1'
+
+
+class h2 (HTMLElement):
+    tag = 'h2'
+
+
+class h3 (HTMLElement):
+    tag = 'h3'
+
+
+class h4 (HTMLElement):
+    tag = 'h4'
+
+
+class head (HTMLElement):
+    tag = 'head'
+
+
+class header (HTMLElement):
+    tag = 'header'
+
+
+class hr (HTMLElement):
+    tag = 'hr'
+
+
+class html (HTMLElement):
+    tag = 'html'
+
+
+class img (HTMLElement):
+    tag = 'img'
+
+
+class li (HTMLElement):
+    tag = 'li'
+
+
+class link (HTMLElement):
+    tag = 'link'
+
+
+class meta (HTMLElement):
+    tag = 'meta'
+
+
+class nav (HTMLElement):
+    tag = 'nav'
+
+
+class ol (HTMLElement):
+    tag = 'ol'
+
+
+class p (HTMLElement):
+    tag = 'p'
+
+
+class small (HTMLElement):
+    tag = 'small'
+
+
+class span (HTMLElement):
+    tag = 'span'
+
+
+class style (HTMLElement):
+    tag = 'style'
+
+
+class table (HTMLElement):
+    tag = 'table'
+
+
+class tbody (HTMLElement):
+    tag = 'tbody'
+
+
+class td (HTMLElement):
+    tag = 'td'
+
+
+class th (HTMLElement):
+    tag = 'th'
+
+
+class thead (HTMLElement):
+    tag = 'thead'
+
+
+class title (HTMLElement):
+    tag = 'title'
+
+
+class tr (HTMLElement):
+    tag = 'tr'
+
+
+class ul (HTMLElement):
+    tag = 'ul'

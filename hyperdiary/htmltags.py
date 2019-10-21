@@ -1,12 +1,9 @@
 _escaped_attrs = ('id', 'class', 'type')
 
-_render_compact_tags = ('p', 'span', 'a', 'b', 'i', 'small', 'li',
-                        'h1', 'h2', 'h3', 'h4',
-                        'button', 'ht', 'td', 'title')
-
 
 class HTMLElement(object):
     tag = 'div'
+    render_compact = False
 
     def __init__(self, *content, **attributes):
         self.content = list(content)
@@ -39,7 +36,7 @@ class HTMLElement(object):
         is_doc_root = self.tag.lower() == 'html'
         if is_doc_root:
             yield '<!DOCTYPE HTML>\n'
-        do_linebreak = self.tag not in _render_compact_tags and self.content
+        do_linebreak = not self.render_compact and self.content
         yield indent
         yield '<'
         yield self.tag
@@ -88,131 +85,164 @@ class HTMLElement(object):
 
 class a (HTMLElement):
     tag = 'a'
+    render_compact = True
 
 
 class article (HTMLElement):
     tag = 'article'
+    render_compact = False
 
 
 class body (HTMLElement):
     tag = 'body'
+    render_compact = False
 
 
 class button (HTMLElement):
     tag = 'button'
+    render_compact = True
 
 
 class div (HTMLElement):
     tag = 'div'
+    render_compact = False
 
 
 class footer (HTMLElement):
     tag = 'footer'
+    render_compact = False
 
 
 class form (HTMLElement):
     tag = 'form'
+    render_compact = False
 
 
 class h1 (HTMLElement):
     tag = 'h1'
+    render_compact = True
 
 
 class h2 (HTMLElement):
     tag = 'h2'
+    render_compact = True
 
 
 class h3 (HTMLElement):
     tag = 'h3'
+    render_compact = True
 
 
 class h4 (HTMLElement):
     tag = 'h4'
+    render_compact = True
 
 
 class head (HTMLElement):
     tag = 'head'
+    render_compact = False
 
 
 class header (HTMLElement):
     tag = 'header'
+    render_compact = False
 
 
 class hr (HTMLElement):
     tag = 'hr'
+    render_compact = False
 
 
 class html (HTMLElement):
     tag = 'html'
+    render_compact = False
 
 
 class img (HTMLElement):
     tag = 'img'
+    render_compact = False
 
 
 class li (HTMLElement):
     tag = 'li'
+    render_compact = True
 
 
 class link (HTMLElement):
     tag = 'link'
+    render_compact = False
 
 
 class meta (HTMLElement):
     tag = 'meta'
+    render_compact = False
 
 
 class nav (HTMLElement):
     tag = 'nav'
+    render_compact = False
 
 
 class ol (HTMLElement):
     tag = 'ol'
+    render_compact = False
 
 
 class p (HTMLElement):
     tag = 'p'
+    render_compact = True
 
 
 class small (HTMLElement):
     tag = 'small'
+    render_compact = True
 
 
 class span (HTMLElement):
     tag = 'span'
+    render_compact = True
 
 
 class style (HTMLElement):
     tag = 'style'
+    render_compact = False
 
 
 class table (HTMLElement):
     tag = 'table'
+    render_compact = False
 
 
 class tbody (HTMLElement):
     tag = 'tbody'
+    render_compact = False
 
 
 class td (HTMLElement):
     tag = 'td'
+    render_compact = True
 
 
 class th (HTMLElement):
     tag = 'th'
+    render_compact = False
 
 
 class thead (HTMLElement):
     tag = 'thead'
+    render_compact = False
 
 
 class title (HTMLElement):
     tag = 'title'
+    render_compact = True
 
 
 class tr (HTMLElement):
     tag = 'tr'
+    render_compact = False
 
 
 class ul (HTMLElement):
     tag = 'ul'
+    render_compact = False

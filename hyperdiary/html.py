@@ -2,14 +2,15 @@ import os
 from datetime import timedelta
 from itertools import groupby
 from collections import defaultdict
+from typing import Iterable
 from . import diary
 from .simplepath import AbsolutePath, RelativePath
 from .htmltags import article, header, head, h1, h4, ul, li, a, span, div, \
-    footer, meta, link, style, html, body, title
+    footer, meta, link, style, html, body, title, HTMLElement
 
 
-def wrap_page(body_content, page_title=None, encoding='utf-8',
-              css_references=[], inline_css=None):
+def wrap_page(body_content, page_title: str=None, encoding: str='utf-8',
+              css_references: Iterable[str]=[], inline_css: str=None) -> html:
     h = head(
             meta(charset=encoding),
             meta(name='viewport',
@@ -28,7 +29,7 @@ def nice_date(dt):
     return dt.strftime("%d.%m.%Y")
 
 
-def day_to_html(current, entry, link_to_id_fn=None):
+def day_to_html(current, entry, link_to_id_fn=None) -> HTMLElement:
     day = article(_class='card', _id=str(path_for_date(current)))(
                 header(h4(nice_date(current)))
             )
@@ -66,7 +67,7 @@ def day_to_html(current, entry, link_to_id_fn=None):
     return day
 
 
-def wrap_html_page(content, title=None, level=0):
+def wrap_html_page(content, title=None, level=0) -> html:
     return wrap_page(
         div(content, _class='content'),
         page_title=title,

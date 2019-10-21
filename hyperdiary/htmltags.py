@@ -1,9 +1,11 @@
+from typing import Iterable
+
 _escaped_attrs = ('id', 'class', 'type')
 
 
 class HTMLElement(object):
-    tag = 'div'
-    render_compact = False
+    tag = 'div'  # type: str
+    render_compact = False  # type: bool
 
     def __init__(self, *content, **attributes):
         self.content = list(content)
@@ -12,18 +14,18 @@ class HTMLElement(object):
             if '_' + a in self.attributes:
                 self.attributes[a] = self.attributes.pop('_' + a)
 
-    def append(self, *items):
+    def append(self, *items) -> 'HTMLElement':
         self.content += items
         return self
 
-    def __call__(self, *items):
+    def __call__(self, *items) -> 'HTMLElement':
         return self.append(*items)
 
     def subelement(self, item):
         self.content.append(item)
         return item
 
-    def lazy_render_attributes(self):
+    def lazy_render_attributes(self) -> Iterable[str]:
         if self.attributes:
             for k, v in self.attributes.items():
                 yield ' '
@@ -32,7 +34,7 @@ class HTMLElement(object):
                 yield str(v)
                 yield '"'
 
-    def lazy_render(self, indent='', add_indent=''):
+    def lazy_render(self, indent='', add_indent='') -> Iterable[str]:
         is_doc_root = self.tag.lower() == 'html'
         if is_doc_root:
             yield '<!DOCTYPE HTML>\n'
@@ -62,7 +64,7 @@ class HTMLElement(object):
         if is_doc_root:
             yield '\n'
 
-    def __str__(self):
+    def __str__(self) -> str:
         '''Render element to string.
         >>> str(a('Somewhere', href="#"))
         '<a href="#">Somewhere</a>'
@@ -75,7 +77,7 @@ class HTMLElement(object):
         '''
         return ''.join(self.lazy_render(add_indent='  '))
 
-    def write(self, fname):
+    def write(self, fname: str) -> None:
         with open(fname, 'w') as f:
             for s in self.lazy_render(add_indent='  '):
                 f.write(s)

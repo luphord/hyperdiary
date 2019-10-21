@@ -66,6 +66,16 @@ class HTMLElement(object):
             yield '\n'
 
     def __str__(self):
+        '''Render element to string.
+        >>> str(a('Somewhere', href="#"))
+        '<a href="#">Somewhere</a>'
+        >>> str(p())
+        '<p></p>'
+        >>> str(div('Hello World'))
+        '<div>\\n  Hello World\\n</div>'
+        >>> str(table())
+        '<table></table>'
+        '''
         return ''.join(self.lazy_render(add_indent='  '))
 
     def write(self, fname):

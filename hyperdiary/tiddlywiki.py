@@ -106,6 +106,9 @@ def diary_to_tiddlers(diary_instance):
     entries = diary_instance.entries
     for dt in sorted(entries.keys()):
         yield Tiddler.from_entry(dt, entries[dt])
+    # ToDo: add additional (system) tiddlers
+    # yield Tiddler(title='$:/DefaultTiddlers', fname='defaultxxx',
+    #               text='[[10.06.2019]]')
 
 
 def diary_to_tiddlers_export(diary_instance, tiddler_dir):

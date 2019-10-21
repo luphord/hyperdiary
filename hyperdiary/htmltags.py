@@ -1,4 +1,6 @@
-from typing import Iterable
+from typing import Iterable, Union
+
+HTMLContent = Union['HTMLElement', str]
 
 _escaped_attrs = ('id', 'class', 'type')
 
@@ -7,21 +9,21 @@ class HTMLElement(object):
     tag = 'div'  # type: str
     render_compact = False  # type: bool
 
-    def __init__(self, *content, **attributes):
+    def __init__(self, *content: HTMLContent, **attributes: str) -> None:
         self.content = list(content)
         self.attributes = attributes
         for a in _escaped_attrs:
             if '_' + a in self.attributes:
                 self.attributes[a] = self.attributes.pop('_' + a)
 
-    def append(self, *items) -> 'HTMLElement':
+    def append(self, *items: HTMLContent) -> 'HTMLElement':
         self.content += items
         return self
 
-    def __call__(self, *items) -> 'HTMLElement':
+    def __call__(self, *items: HTMLContent) -> 'HTMLElement':
         return self.append(*items)
 
-    def subelement(self, item):
+    def subelement(self, item: 'HTMLElement') -> 'HTMLElement':
         self.content.append(item)
         return item
 
@@ -34,7 +36,7 @@ class HTMLElement(object):
                 yield str(v)
                 yield '"'
 
-    def lazy_render(self, indent='', add_indent='') -> Iterable[str]:
+    def lazy_render(self, indent: str='', add_indent: str='') -> Iterable[str]:
         is_doc_root = self.tag.lower() == 'html'
         if is_doc_root:
             yield '<!DOCTYPE HTML>\n'
@@ -50,7 +52,7 @@ class HTMLElement(object):
         if not do_linebreak:
             add_indent = ''
         for child in self.content:
-            if hasattr(child, 'lazy_render'):
+            if isinstance(child, HTMLElement):
                 yield from child.lazy_render(child_indent, add_indent)
             else:
                 yield '{}{}'.format(child_indent, child)

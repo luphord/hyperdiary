@@ -14,5 +14,6 @@ install:
 
 # Command to run tests, e.g. python setup.py test
 script:
+  - mypy --config-file mypy.ini hyperdiary tests
   - flake8 hyperdiary tests
   - python setup.py test

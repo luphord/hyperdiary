@@ -2,6 +2,12 @@
 History
 =======
 
+0.4.0 (not yet)
+---------------
+
+* first type annotations added
+* linting in CI
+
 0.3.2 (2019-10-17)
 ------------------
 

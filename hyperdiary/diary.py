@@ -1,19 +1,20 @@
 import re
 import enum
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 import yaml
 import json
 from pathlib import Path
+from typing import Dict, List, Optional  # noqa: F401
 
 
 class Diary:
-    def __init__(self, hyperdiary_json):
+    def __init__(self, hyperdiary_json: Dict) -> None:
         for key, val in hyperdiary_json.items():
             setattr(self, key, val)
         if not hasattr(self, 'expected'):
-            self.expected = []
+            self.expected = []  # type: List[date]
         self.expected = [DateRange.from_json(obj) for obj in self.expected]
-        self.entries = None
+        self.entries = dict()  # type: Dict[date, object]
 
     def load_entries(self):
         self.entries = dict()
@@ -49,7 +50,7 @@ class Diary:
 
 
 class DateRange:
-    def __init__(self, start, end):
+    def __init__(self, start: date, end: date) -> None:
         self.start = start
         self.end = end
 
@@ -80,15 +81,15 @@ class EntryType(enum.Enum):
 
 
 def iter_entries(yml):
-    for date, entries in yml.items():
-        # date = datetime.strptime(date, '%Y-%m-%d').date() not required,
+    for dt, entries in yml.items():
+        # dt = datetime.strptime(dt, '%Y-%m-%d').date() not required,
         # apparently already parsed to date object
         for entry in entries:
             if isinstance(entry, str):
-                yield (date, entry, EntryType.Line)
+                yield (dt, entry, EntryType.Line)
             elif isinstance(entry, dict):
                 for k, v in entry.items():
-                    yield (date, k, EntryType.Dict)
+                    yield (dt, k, EntryType.Dict)
                     for l in v:
                         yield (date, l, EntryType.DictLine)
 

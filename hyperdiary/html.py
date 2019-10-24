@@ -189,7 +189,7 @@ MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
                'December']
 
 
-def rel_path(spath: str) -> RelativePath:
+def rel_path(spath: Union[date, str, int]) -> RelativePath:
     return RelativePath(str(spath))
 
 

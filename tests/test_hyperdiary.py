@@ -45,7 +45,7 @@ class TestHyperdiary(unittest.TestCase):
 
     def test_missing_hyperdiary_json(self):
         self.assertRaises(FileNotFoundError, Diary.discover,
-                          path=in_test_folder('.'))
+                          subpath=in_test_folder('.'))
 
     def test_tokenization(self):
         line = '+tag A $test-line by $Jane_Doe|Jane; expect no content +hallo'

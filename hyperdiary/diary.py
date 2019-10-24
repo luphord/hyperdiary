@@ -4,19 +4,21 @@ from datetime import datetime, date, timedelta
 import yaml
 import json
 from pathlib import Path
-from typing import Dict, List, Optional  # noqa: F401
+from typing import Mapping, Dict, List, Iterable, Optional, Union  # noqa: F401
+
+Pathlike = Union[Path, str]
 
 
 class Diary:
-    def __init__(self, hyperdiary_json: Dict) -> None:
-        for key, val in hyperdiary_json.items():
-            setattr(self, key, val)
-        if not hasattr(self, 'expected'):
-            self.expected = []  # type: List[date]
-        self.expected = [DateRange.from_json(obj) for obj in self.expected]
+    def __init__(self, hyperdiary_json: Mapping) -> None:
+        j = hyperdiary_json
+        self.sources = j.get('sources', [])  # type: List[str]
+        self.expected = [DateRange.from_json(obj)
+                         for obj in j.get('expected', [])] \
+            # type: List[DateRange]
         self.entries = dict()  # type: Dict[date, object]
 
-    def load_entries(self):
+    def load_entries(self) -> None:
         self.entries = dict()
         for fname in self.sources:
             with open(fname) as f:
@@ -28,8 +30,8 @@ class Diary:
                     self.entries[dt] = entry
 
     @staticmethod
-    def discover(path):
-        path = Path(path).resolve()
+    def discover(subpath: Pathlike) -> 'Diary':
+        path = Path(subpath).resolve()
         while not (path / 'hyperdiary.json').exists() and len(path.parts) > 1:
             path = path.parent
         hyperdiary_json_path = path / 'hyperdiary.json'
@@ -43,7 +45,7 @@ class Diary:
             return Diary(hyperdiary_json)
 
     @staticmethod
-    def discover_and_load(path='.'):
+    def discover_and_load(path: Pathlike='.') -> 'Diary':
         diary = Diary.discover(path)
         diary.load_entries()
         return diary
@@ -54,7 +56,7 @@ class DateRange:
         self.start = start
         self.end = end
 
-    def __iter__(self):
+    def __iter__(self) -> Iterable[date]:
         current = self.start
         one_day = timedelta(days=1)
         while current <= self.end:
@@ -62,7 +64,7 @@ class DateRange:
             current += one_day
 
     @staticmethod
-    def from_json(obj):
+    def from_json(obj: Mapping['str', 'str']):
         if 'start' not in obj:
             raise KeyError('"start" is required in an expected date range')
         start = datetime.strptime(obj['start'], '%Y-%m-%d').date()
@@ -76,7 +78,7 @@ class DateRange:
 @enum.unique
 class EntryType(enum.Enum):
     Line = 1
-    Dict = 2
+    Dict = 2  # noqa: F811
     DictLine = 3
 
 

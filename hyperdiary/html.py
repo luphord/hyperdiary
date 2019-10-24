@@ -1,16 +1,17 @@
 import os
-from datetime import timedelta
+from datetime import timedelta, date
 from itertools import groupby
 from collections import defaultdict
-from typing import Iterable
+from typing import Iterable, Dict, Union  # noqa: F401
 from . import diary
 from .simplepath import AbsolutePath, RelativePath
 from .htmltags import article, header, head, h1, h4, ul, li, a, span, div, \
-    footer, meta, link, style, html, body, title, HTMLElement
+    footer, meta, link, style, html, body, title, HTMLElement, HTMLContent
 
 
-def wrap_page(body_content, page_title: str=None, encoding: str='utf-8',
-              css_references: Iterable[str]=[], inline_css: str=None) -> html:
+def wrap_page(body_content: HTMLContent, page_title: str=None,
+              encoding: str='utf-8', css_references: Iterable[str]=[],
+              inline_css: str=None) -> html:
     h = head(
             meta(charset=encoding),
             meta(name='viewport',
@@ -25,11 +26,11 @@ def wrap_page(body_content, page_title: str=None, encoding: str='utf-8',
     return html(h, body(body_content))
 
 
-def nice_date(dt):
+def nice_date(dt: date) -> str:
     return dt.strftime("%d.%m.%Y")
 
 
-def day_to_html(current, entry, link_to_id_fn=None) -> HTMLElement:
+def day_to_html(current: date, entry, link_to_id_fn=None) -> HTMLElement:
     day = article(_class='card', _id=str(path_for_date(current)))(
                 header(h4(nice_date(current)))
             )
@@ -67,7 +68,8 @@ def day_to_html(current, entry, link_to_id_fn=None) -> HTMLElement:
     return day
 
 
-def wrap_html_page(content, title=None, level=0) -> html:
+def wrap_html_page(content: HTMLContent, title: str=None, level: int=0) \
+        -> html:
     return wrap_page(
         div(content, _class='content'),
         page_title=title,
@@ -78,8 +80,8 @@ def wrap_html_page(content, title=None, level=0) -> html:
     )
 
 
-def diary_to_html(diary, fname):
-    entries = diary.entries
+def diary_to_html(diary_instance: diary.Diary, fname: str) -> None:
+    entries = diary_instance.entries
 
     content = div(h1('Entries'))
     entries_html = content.subelement(div())
@@ -91,39 +93,41 @@ def diary_to_html(diary, fname):
     wrap_html_page(content, title='Diary').write(fname)
 
 
-def diary_to_html_folder(diary_instance, folder):
+def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
     entries = diary_instance.entries
-    dates = list(entries.keys())
-    dates.sort()
+    all_dates = list(entries.keys())
+    all_dates.sort()
 
-    root_path = path('/')
-    entries_path = path('/entries')
-    ids_path = path('/ids')
+    root_path = AbsolutePath('/')
+    entries_path = AbsolutePath('/entries')
+    ids_path = AbsolutePath('/ids')
 
     def folder_from_path(p: AbsolutePath):
         return os.path.join(folder, str(p - root_path))
+
     entries_ul = ul()
 
-    identifiers = defaultdict(list)
+    identifiers = defaultdict(list)  # type: Dict[str, list]
 
-    for year, dates in groupby(dates, lambda d: d.year):
-        year_path = entries_path + path(year)
+    for year, dates in groupby(all_dates, lambda d: d.year):
+        year_path = entries_path + rel_path(year)
         year_ul = ul()
 
         for month, dates in groupby(dates, lambda d: d.month):
             s_month = '{:02d}'.format(month)
-            month_path = year_path + path(s_month)
+            month_path = year_path + rel_path(s_month)
             month_html = div(h1('{} {}'.format(MONTH_NAMES[month-1], year)))
             month_ul = month_html.subelement(ul())
 
             for current in dates:
                 s_day = '{:02d}'.format(current.day)
-                day_path = month_path + path(s_day)
+                day_path = month_path + rel_path(s_day)
                 day_folder = folder_from_path(day_path)
                 os.makedirs(day_folder, exist_ok=True)
                 day_html = day_to_html(current, entries[current],
                                        lambda sid: str(ids_path +
-                                                       path(sid) - day_path))
+                                                       rel_path(sid) -
+                                                       day_path))
 
                 foot = div(_class='flex four')
                 day_html.append(footer(foot))
@@ -162,7 +166,7 @@ def diary_to_html_folder(diary_instance, folder):
 
     ids_ul = ul()
     for identifier, days in sorted(identifiers.items()):
-        id_path = ids_path + path(identifier.ref)
+        id_path = ids_path + rel_path(identifier.ref)
         id_folder = folder_from_path(id_path)
         os.makedirs(id_folder, exist_ok=True)
         append_li_a(ids_ul, identifier.text, str(id_path - ids_path))
@@ -185,17 +189,15 @@ MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
                'December']
 
 
-def path(spath):
-    spath = str(spath)
-    return AbsolutePath(spath) \
-        if spath.startswith('/') \
-        else RelativePath(spath)
+def rel_path(spath: str) -> RelativePath:
+    return RelativePath(str(spath))
 
 
-def path_for_date(date):
-    return path('/entries/{}/{:02d}/{:02d}'.format(date.year, date.month,
-                                                   date.day))
+def path_for_date(dt: date) -> AbsolutePath:
+    return AbsolutePath('/entries/{}/{:02d}/{:02d}'.format(dt.year,
+                                                           dt.month,
+                                                           dt.day))
 
 
-def append_li_a(ul, text, href):
+def append_li_a(ul: HTMLElement, text: str, href: str) -> None:
     ul.append(li(a(text, href=href)))

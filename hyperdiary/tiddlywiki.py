@@ -3,10 +3,11 @@ import io
 import re
 import unicodedata
 from datetime import date
+from typing import Union, Iterable, Iterator, Tuple
 from . import diary
 
 
-def make_tiddler_filename(o):
+def make_tiddler_filename(o: Union[str, date]) -> str:
     '''
     >>> make_tiddler_filename("Frühstück Ähre Grüße Föhn")
     'fruehstueck-aehre-gruesse-foehn.tid'
@@ -34,43 +35,43 @@ def make_tiddler_filename(o):
 
 
 class Tiddler:
-    def __init__(self, fname, **fields):
+    def __init__(self, fname: diary.Pathlike, **fields: str) -> None:
         self.fname = fname
         self.fields = dict(**fields)
 
     @property
-    def title(self):
+    def title(self) -> str:
         return self.fields['title']
 
     @property
-    def text(self):
+    def text(self) -> str:
         return self.fields['text']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return '<Tiddler(title="{0}")>'.format(self.title)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return 'Tiddler({0})'.format(', '.join(
             '{}="{}"'.format(k, v) for k, v in self.fields.items()))
 
-    def _fields_without_text(self):
+    def _fields_without_text(self) -> Iterator[Tuple[str, str]]:
         for key, val in self.fields.items():
             if key.lower() != 'text':
                 yield key, val
 
-    def to_tid(self):
+    def to_tid(self) -> str:
         return '\n'.join(['{} = {}'.format(k, v) for k, v in
                           self._fields_without_text()]) \
             + '\ntype: text/vnd.tiddlywik\n\n' \
             + self.text
 
-    def to_div(self):
+    def to_div(self) -> str:
         args = ' '.join(['{}="{}"'.format(k, v) for k, v in
                          self._fields_without_text()])
         return '<div {}>\n<pre>\n{}\n</pre>\n</div>'.format(args, self.text)
 
     @staticmethod
-    def from_entry(dt, entry):
+    def from_entry(dt: date, entry: Iterable) -> 'Tiddler':
         tags = []
         day_text = io.StringIO()
         for line in entry:
@@ -98,11 +99,11 @@ class Tiddler:
         return Tiddler(make_tiddler_filename(dt), **fields)
 
 
-def nice_date(dt):
+def nice_date(dt: date) -> str:
     return dt.strftime("%d.%m.%Y")
 
 
-def diary_to_tiddlers(diary_instance):
+def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
     entries = diary_instance.entries
     for dt in sorted(entries.keys()):
         yield Tiddler.from_entry(dt, entries[dt])
@@ -111,21 +112,26 @@ def diary_to_tiddlers(diary_instance):
     #               text='[[10.06.2019]]')
 
 
-def diary_to_tiddlers_export(diary_instance, tiddler_dir):
-    os.makedirs(tiddler_dir, exist_ok=True)
+def diary_to_tiddlers_export(diary_instance: diary.Diary,
+                             tiddler_dir: diary.Pathlike) -> None:
+    os.makedirs(str(tiddler_dir), exist_ok=True)
     for tiddler in diary_to_tiddlers(diary_instance):
-        with open(os.path.join(tiddler_dir, tiddler.fname), 'w') as f:
+        with open(os.path.join(str(tiddler_dir), str(tiddler.fname)), 'w') \
+                as f:
             f.write(tiddler.to_tid())
 
 
 _STORE_AREA_SENTINEL = 'id="storeArea"'
 
 
-def diary_to_tiddlywiki_export(diary_instance, file, tiddlywiki_base_file):
+def diary_to_tiddlywiki_export(diary_instance: diary.Diary,
+                               file: diary.Pathlike,
+                               tiddlywiki_base_file: diary.Pathlike) -> None:
     content = '\n'.join(tiddler.to_div() for tiddler in
                         diary_to_tiddlers(diary_instance))
     sentinel_found = False
-    with open(file, 'w') as f, open(tiddlywiki_base_file, 'r') as wiki:
+    with open(str(file), 'w') as f, \
+            open(str(tiddlywiki_base_file), 'r') as wiki:
         for line in wiki:
             f.write(line)
             if _STORE_AREA_SENTINEL in line:

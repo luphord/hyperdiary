@@ -90,7 +90,7 @@ class RelativePath:
             raise NotARelativePathError(path)
         self.elements = _validate_and_shorten(False, path.split('/'))
 
-    def __str__(self):
+    def __str__(self) -> str:
         '''
         >>> str(RelativePath('a/b/c'))
         './a/b/c'
@@ -100,7 +100,7 @@ class RelativePath:
             prefix = ''
         return prefix + '/'.join(self.elements)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         '''
         >>> RelativePath('d/e/f')
         RelativePath('./d/e/f')
@@ -204,19 +204,19 @@ class AbsolutePath:
             e2.pop(0)
         return RelativePath('../' * len(e2) + '/'.join(e1))
 
-    def __str__(self):
+    def __str__(self) -> str:
         '''
         >>> str(AbsolutePath('/a/b/c'))
         '/a/b/c'
         '''
         return '/' + '/'.join(self.elements)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         '''
         >>> AbsolutePath('/a/b/c')
         AbsolutePath('/a/b/c')
         '''
         return 'AbsolutePath(\'{}\')'.format(self)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(repr(self))

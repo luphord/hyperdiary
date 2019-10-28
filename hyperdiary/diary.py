@@ -4,7 +4,8 @@ from datetime import datetime, date, timedelta
 import yaml
 import json
 from pathlib import Path
-from typing import Mapping, Dict, List, Iterable, Optional, Union  # noqa: F401
+from typing import Union, Tuple, Mapping, Iterable
+from typing import Dict, List, Optional  # noqa: F401
 
 Pathlike = Union[Path, str]
 
@@ -16,7 +17,7 @@ class Diary:
         self.expected = [DateRange.from_json(obj)
                          for obj in j.get('expected', [])] \
             # type: List[DateRange]
-        self.entries = dict()  # type: Dict[date, object]
+        self.entries = dict()  # type: Dict[date, Iterable]
 
     def load_entries(self) -> None:
         self.entries = dict()
@@ -82,7 +83,8 @@ class EntryType(enum.Enum):
     DictLine = 3
 
 
-def iter_entries(yml):
+def iter_entries(yml: Mapping[date, Iterable]) \
+        -> Iterable[Tuple[date, str, EntryType]]:
     for dt, entries in yml.items():
         # dt = datetime.strptime(dt, '%Y-%m-%d').date() not required,
         # apparently already parsed to date object
@@ -93,7 +95,7 @@ def iter_entries(yml):
                 for k, v in entry.items():
                     yield (dt, k, EntryType.Dict)
                     for l in v:
-                        yield (date, l, EntryType.DictLine)
+                        yield (dt, l, EntryType.DictLine)
 
 
 def find_tags(line):

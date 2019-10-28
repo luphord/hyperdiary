@@ -65,7 +65,7 @@ class DateRange:
             current += one_day
 
     @staticmethod
-    def from_json(obj: Mapping['str', 'str']):
+    def from_json(obj: Mapping[str, str]) -> 'DateRange':
         if 'start' not in obj:
             raise KeyError('"start" is required in an expected date range')
         start = datetime.strptime(obj['start'], '%Y-%m-%d').date()
@@ -98,7 +98,7 @@ def iter_entries(yml: Mapping[date, Iterable]) \
                         yield (dt, l, EntryType.DictLine)
 
 
-def find_tags(line):
+def find_tags(line: str) -> Iterable['Token']:
     '''
     >>> line = "+tag1 +tag2 some content goes here +tag3"
     >>> res = [t.text for t in find_tags(line)]
@@ -108,11 +108,11 @@ def find_tags(line):
     return find(line, TokenType.Tag)
 
 
-def find_ids(line):
+def find_ids(line: str) -> Iterable['Token']:
     return find(line, TokenType.Id)
 
 
-def find(line, token_type):
+def find(line: str, token_type: 'TokenType') -> Iterable['Token']:
     return [token for token in tokenize(line) if token.type == token_type]
 
 
@@ -133,7 +133,7 @@ _REPLACEMENTS = {
 }
 
 
-def make_id(sid):
+def make_id(sid: str) -> str:
     sid = sid.lower()
     for k, v in _REPLACEMENTS.items():
         sid = sid.replace(k, v)
@@ -141,7 +141,7 @@ def make_id(sid):
     return sid
 
 
-def _capitalize(s):
+def _capitalize(s: str) -> Iterable[str]:
     up = True
     for letter in s:
         if up:
@@ -153,12 +153,12 @@ def _capitalize(s):
             yield letter
 
 
-def beautify_id(sid):
+def beautify_id(sid: str) -> str:
     return ''.join(_capitalize(sid.replace('_', ' ')))
 
 
 class Token:
-    def __init__(self, type, text, ref=None):
+    def __init__(self, type: TokenType, text: str, ref: str=None) -> None:
         self.type = type
         self.text = text
         self.ref = ref
@@ -168,11 +168,11 @@ class Token:
                 self.text = beautify_id(s[1] if len(s) == 2 else s[0])
                 self.ref = make_id(s[0])
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return 'Token({0}, "{1}", "{2}")'.format(self.type, self.text,
                                                  self.ref)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, Token):
             return False
         if self.type == TokenType.Id and other.type == TokenType.Id:
@@ -180,20 +180,20 @@ class Token:
         return self.type == other.type and self.text == other.text \
             and self.ref == other.ref
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         if self.type == TokenType.Id:
             return hash(self.type) ^ hash(self.ref)
         return hash(self.type) ^ hash(self.text) ^ hash(self.ref)
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         return self.text < other.text
 
 
 re_separator = re.compile(' |;|,|\\.')
 
 
-def _fragmented_tokenize(line):
-    current = []
+def _fragmented_tokenize(line: str) -> Iterable[Token]:
+    current = []  # type: List[str]
     current_type = TokenType.Text
     for letter in line:
         if re_separator.match(letter):
@@ -217,7 +217,7 @@ def _fragmented_tokenize(line):
         yield Token(current_type, ''.join(current))
 
 
-def tokenize(line):
+def tokenize(line: str) -> Iterable[Token]:
     text_token = Token(TokenType.Text, '')
     for next in _fragmented_tokenize(line):
         if next.type == TokenType.Text:

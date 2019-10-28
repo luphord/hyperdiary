@@ -107,7 +107,7 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
 
     entries_ul = ul()
 
-    identifiers = defaultdict(list)  # type: Dict[str, list]
+    identifiers = defaultdict(list)  # type: Dict[diary.Token, list]
 
     for year, dates in groupby(all_dates, lambda d: d.year):
         year_path = entries_path + rel_path(year)
@@ -166,6 +166,8 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
 
     ids_ul = ul()
     for identifier, days in sorted(identifiers.items()):
+        assert identifier.ref is not None, \
+            '{} has broken ref'.format(identifier)
         id_path = ids_path + rel_path(identifier.ref)
         id_folder = folder_from_path(id_path)
         os.makedirs(id_folder, exist_ok=True)

@@ -1,15 +1,16 @@
 import os
 import io
+from datetime import date
 from . import diary
 
 
-def nice_date(dt):
+def nice_date(dt: date) -> str:
     return dt.strftime("%d.%m.%Y")
 
 
-def diary_to_hugo(diary_instance, fname):
+def diary_to_hugo(diary_instance: diary.Diary, folder: diary.Pathlike) -> None:
     entries = diary_instance.entries
-    content_dir = os.path.join(fname, 'content')
+    content_dir = os.path.join(str(folder), 'content')
     os.makedirs(content_dir, exist_ok=True)
 
     for current in sorted(entries.keys()):
@@ -25,8 +26,8 @@ def diary_to_hugo(diary_instance, fname):
                 day_text.write('- ')
                 for token in diary.tokenize(line):
                     if token.type == diary.TokenType.Id:
-                        day_text.write('[{}]({})'.format(token.text,
-                                                         '#' + token.ref))
+                        day_text.write('[{}](#{})'.format(token.text,
+                                                          token.ref))
                     elif token.type == diary.TokenType.Text:
                         day_text.write(token.text)
                     elif token.type == diary.TokenType.Tag:

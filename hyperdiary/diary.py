@@ -4,7 +4,7 @@ from datetime import datetime, date, timedelta
 import yaml
 import json
 from pathlib import Path
-from typing import Union, Tuple, Mapping, Iterable
+from typing import Union, Tuple, Mapping, Iterable, Iterator
 from typing import Dict, List, Optional  # noqa: F401
 
 Pathlike = Union[Path, str]
@@ -57,7 +57,7 @@ class DateRange:
         self.start = start
         self.end = end
 
-    def __iter__(self) -> Iterable[date]:
+    def __iter__(self) -> Iterator[date]:
         current = self.start
         one_day = timedelta(days=1)
         while current <= self.end:

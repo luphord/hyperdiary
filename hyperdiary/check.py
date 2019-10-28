@@ -1,4 +1,7 @@
-def check(diary):
+from .diary import Diary
+
+
+def check(diary: Diary) -> None:
     dates_found = set()
     for dtrange in diary.expected:
         for dt in dtrange:

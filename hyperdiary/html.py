@@ -2,7 +2,7 @@ import os
 from datetime import timedelta, date
 from itertools import groupby
 from collections import defaultdict
-from typing import Iterable, Dict, Union  # noqa: F401
+from typing import Iterable, Dict, Union, Callable, Optional  # noqa: F401
 from . import diary
 from .simplepath import AbsolutePath, RelativePath
 from .htmltags import article, header, head, h1, h4, ul, li, a, span, div, \
@@ -30,7 +30,9 @@ def nice_date(dt: date) -> str:
     return dt.strftime("%d.%m.%Y")
 
 
-def day_to_html(current: date, entry, link_to_id_fn=None) -> HTMLElement:
+def day_to_html(current: date, entry: Iterable,
+                link_to_id_fn: Callable[[Optional[str]], str]=None) \
+        -> HTMLElement:
     day = article(_class='card', _id=str(path_for_date(current)))(
                 header(h4(nice_date(current)))
             )
@@ -102,7 +104,7 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
     entries_path = AbsolutePath('/entries')
     ids_path = AbsolutePath('/ids')
 
-    def folder_from_path(p: AbsolutePath):
+    def folder_from_path(p: AbsolutePath) -> str:
         return os.path.join(folder, str(p - root_path))
 
     entries_ul = ul()
@@ -124,10 +126,14 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
                 day_path = month_path + rel_path(s_day)
                 day_folder = folder_from_path(day_path)
                 os.makedirs(day_folder, exist_ok=True)
+
+                def link_to_id_fn(sid: Optional[str]) -> str:
+                    assert sid is not None, \
+                        'Got invalid identifier {}'.format(sid)
+                    return str(ids_path + rel_path(sid) - day_path)
+
                 day_html = day_to_html(current, entries[current],
-                                       lambda sid: str(ids_path +
-                                                       rel_path(sid) -
-                                                       day_path))
+                                       link_to_id_fn)
 
                 foot = div(_class='flex four')
                 day_html.append(footer(foot))

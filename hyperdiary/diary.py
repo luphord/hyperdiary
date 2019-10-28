@@ -185,7 +185,7 @@ class Token:
             return hash(self.type) ^ hash(self.ref)
         return hash(self.type) ^ hash(self.text) ^ hash(self.ref)
 
-    def __lt__(self, other) -> bool:
+    def __lt__(self, other: 'Token') -> bool:
         return self.text < other.text
 
 

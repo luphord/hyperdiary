@@ -2,7 +2,7 @@ __author__ = 'luphord'
 __email__ = 'luphord@protonmail.com'
 __version__ = '0.3.2'
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from datetime import datetime, date, timedelta
 
 import yaml
@@ -28,7 +28,7 @@ check_parser = subparsers.add_parser('check', help='Check entire diary for '
                                                    'integrity up-to-dateness')
 
 
-def _check_exec(args):
+def _check_exec(args: Namespace) -> None:
     print('Checking diary...')
     check(Diary.discover_and_load(diary_path))
 
@@ -40,7 +40,7 @@ stats_parser = subparsers.add_parser('stats', help='Calculate impressive '
 stats_parser.add_argument('file', nargs='?')
 
 
-def _stats_exec(args):
+def _stats_exec(args: Namespace) -> None:
     print('Stats\n-----')
     if args.file:
         with open(args.file) as f:
@@ -56,7 +56,7 @@ html_parser = subparsers.add_parser('html', help='Export diary to html')
 html_parser.add_argument('file')
 
 
-def _html_exec(args):
+def _html_exec(args: Namespace) -> None:
     print('Exporting diary in HTML to {}'.format(args.file))
     diary_to_html(Diary.discover_and_load(diary_path), args.file)
 
@@ -69,7 +69,7 @@ html_folder_parser = subparsers.add_parser('htmlfolder',
 html_folder_parser.add_argument('folder')
 
 
-def _html_folder_exec(args):
+def _html_folder_exec(args: Namespace) -> None:
     print('Exporting diary in HTML to {}'.format(args.folder))
     diary_to_html_folder(Diary.discover_and_load(diary_path), args.folder)
 
@@ -81,7 +81,7 @@ hugo_parser = subparsers.add_parser('hugo', help='Export diary to hugo static '
 hugo_parser.add_argument('folder')
 
 
-def _hugo_exec(args):
+def _hugo_exec(args: Namespace) -> None:
     print('Exporting diary in hugo static site format to {}'
           .format(args.folder))
     diary_to_hugo(Diary.discover_and_load(diary_path), args.folder)
@@ -95,7 +95,7 @@ tiddler_parser = subparsers.add_parser('tiddlers',
 tiddler_parser.add_argument('folder')
 
 
-def _tiddlers_exec(args):
+def _tiddlers_exec(args: Namespace) -> None:
     print('Exporting diary in tiddlywiki tiddlers format to {}'
           .format(args.folder))
     diary_to_tiddlers_export(Diary.discover_and_load(diary_path), args.folder)
@@ -112,7 +112,7 @@ tiddlywiki_parser.add_argument('-t', '--tiddlywiki-base-file',
 tiddlywiki_parser.add_argument('file')
 
 
-def _tiddlywiki_exec(args):
+def _tiddlywiki_exec(args: Namespace) -> None:
     print('Exporting diary to tiddlywiki as {} with tiddlywiki base file {}'
           .format(args.file, args.tiddlywiki_base_file))
     diary_to_tiddlywiki_export(Diary.discover_and_load(diary_path),
@@ -125,7 +125,7 @@ view_parser = subparsers.add_parser('view',
                                     help='View entries on command line')
 
 
-def parse_date(sdate):
+def parse_date(sdate: str) -> date:
     if sdate.lower() == 'today':
         return date.today()
     if sdate.lower() == 'yesterday':
@@ -139,14 +139,14 @@ def parse_date(sdate):
 view_parser.add_argument('date', type=parse_date)
 
 
-def _view_exec(args):
+def _view_exec(args: Namespace) -> None:
     view(Diary.discover_and_load(diary_path), args.date)
 
 
 view_parser.set_defaults(func=_view_exec)
 
 
-def main():
+def main() -> None:
     try:
         args = parser.parse_args()
         args.func(args)

@@ -2,11 +2,12 @@
 History
 =======
 
-0.4.0 (not yet)
----------------
+0.4.0 (2019-10-30)
+------------------
 
-* first type annotations added
-* linting in CI
+* full type annotations added for package
+* linting and type checking in CI
+* EntryTypes Dict and DictLine are deprecated and will be removed in 0.5 (check issues a warning)
 
 0.3.2 (2019-10-17)
 ------------------

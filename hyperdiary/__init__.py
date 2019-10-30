@@ -147,11 +147,15 @@ view_parser.set_defaults(func=_view_exec)
 
 
 def main() -> None:
+    import sys
     try:
-        args = parser.parse_args()
-        args.func(args)
+        if len(sys.argv) <= 1:
+            print('hyperdiary version {}'.format(__version__))
+            parser.print_help()
+        else:
+            args = parser.parse_args()
+            args.func(args)
     except Exception as e:
-        import sys
         import traceback
         tb = sys.exc_info()[2]
         RED = ''

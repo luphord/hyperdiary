@@ -1,6 +1,6 @@
 __author__ = 'luphord'
 __email__ = 'luphord@protonmail.com'
-__version__ = '0.3.2'
+__version__ = '0.4.0'
 
 from argparse import ArgumentParser, Namespace
 from datetime import datetime, date, timedelta

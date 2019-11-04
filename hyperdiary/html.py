@@ -58,15 +58,6 @@ def day_to_html(current: date, entry: Iterable,
             else:
                 eli.append(e)
             day_list.append(eli)
-        elif isinstance(e, dict):
-            for k, v in e.items():
-                day_list.append(li(k))
-                if isinstance(v, dict):
-                    v = ['{}: {}'.format(_k, _v) for _k, _v in v.items()]
-                uul = ul()
-                day_list.append(uul)
-                for _l in v:
-                    uul.append(li(str(_l)))
     return day
 
 

@@ -79,8 +79,6 @@ class DateRange:
 @enum.unique
 class EntryType(enum.Enum):
     Line = 1
-    Dict = 2  # noqa: F811
-    DictLine = 3
 
 
 class BadEntryException(Exception):

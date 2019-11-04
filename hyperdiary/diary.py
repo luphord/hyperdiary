@@ -17,7 +17,7 @@ class Diary:
         self.expected = [DateRange.from_json(obj)
                          for obj in j.get('expected', [])] \
             # type: List[DateRange]
-        self.entries = dict()  # type: Dict[date, Iterable]
+        self.entries = dict()  # type: Dict[date, List[str]]
 
     def load_entries(self) -> None:
         self.entries = dict()
@@ -85,7 +85,7 @@ class BadEntryException(Exception):
     pass
 
 
-def iter_entries(yml: Mapping[date, Iterable]) \
+def iter_entries(yml: Mapping[date, Iterable[str]]) \
         -> Iterable[Tuple[date, str, EntryType]]:
     for dt, entries in yml.items():
         # dt = datetime.strptime(dt, '%Y-%m-%d').date() not required,

@@ -30,7 +30,7 @@ def nice_date(dt: date) -> str:
     return dt.strftime("%d.%m.%Y")
 
 
-def day_to_html(current: date, entry: Iterable,
+def day_to_html(current: date, entry: Iterable[str],
                 link_to_id_fn: Callable[[Optional[str]], str]=None) \
         -> HTMLElement:
     day = article(_class='card', _id=str(path_for_date(current)))(

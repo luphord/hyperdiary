@@ -4,7 +4,7 @@ from typing import Dict, Mapping, Iterable
 from .diary import find_tags, find_ids, iter_entries
 
 
-def stats(entries: Mapping[date, Iterable]) -> Dict[str, int]:
+def stats(entries: Mapping[date, Iterable[str]]) -> Dict[str, int]:
     output = OrderedDict()  # type: Dict[str, int]
     output['# Days'] = len(entries)
     output['# Entries'] = sum(len(list(v)) for v in entries.values())

@@ -71,7 +71,7 @@ class Tiddler:
         return '<div {}>\n<pre>\n{}\n</pre>\n</div>'.format(args, self.text)
 
     @staticmethod
-    def from_entry(dt: date, entry: Iterable) -> 'Tiddler':
+    def from_entry(dt: date, entry: Iterable[str]) -> 'Tiddler':
         tags = []
         day_text = io.StringIO()
         for line in entry:

@@ -9,9 +9,9 @@ def stats(entries: Mapping[date, Iterable[str]]) -> Dict[str, int]:
     output['# Days'] = len(entries)
     output['# Entries'] = sum(len(list(v)) for v in entries.values())
     output['# Taggings'] = sum(len(list(find_tags(l)))
-                               for d, l, t in iter_entries(entries))
+                               for d, l in iter_entries(entries))
     output['# Identification'] = sum(len(list(find_ids(l)))
-                                     for d, l, t in iter_entries(entries))
+                                     for d, l in iter_entries(entries))
 
     for key, val in output.items():
         print('{:.<20}{:.>5}'.format(key, val))

@@ -76,23 +76,18 @@ class DateRange:
         return DateRange(start, end)
 
 
-@enum.unique
-class EntryType(enum.Enum):
-    Line = 1
-
-
 class BadEntryException(Exception):
     pass
 
 
 def iter_entries(yml: Mapping[date, Iterable[str]]) \
-        -> Iterable[Tuple[date, str, EntryType]]:
+        -> Iterable[Tuple[date, str]]:
     for dt, entries in yml.items():
         # dt = datetime.strptime(dt, '%Y-%m-%d').date() not required,
         # apparently already parsed to date object
         for entry in entries:
             if isinstance(entry, str):
-                yield (dt, entry, EntryType.Line)
+                yield (dt, entry)
             else:
                 msg = 'Bad entry for date {}: {}'.format(dt, entry)
                 raise BadEntryException(msg)

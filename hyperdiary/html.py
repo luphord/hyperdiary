@@ -143,11 +143,10 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
                 wrap_html_page(day_html, level=4).write(index_path)
                 append_li_a(month_ul, str(current), str(day_path - month_path))
 
-                for dt, e, tp in diary.iter_entries(
+                for dt, e in diary.iter_entries(
                         {current: entries[current]}):
-                    if tp == diary.EntryType.Line:
-                        for identifier in diary.find_ids(e):
-                            identifiers[identifier].append(dt)
+                    for identifier in diary.find_ids(e):
+                        identifiers[identifier].append(dt)
 
             index_path = os.path.join(folder_from_path(month_path),
                                       'index.html')

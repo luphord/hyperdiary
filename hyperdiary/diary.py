@@ -83,6 +83,10 @@ class EntryType(enum.Enum):
     DictLine = 3
 
 
+class BadEntryException(Exception):
+    pass
+
+
 def iter_entries(yml: Mapping[date, Iterable]) \
         -> Iterable[Tuple[date, str, EntryType]]:
     for dt, entries in yml.items():
@@ -91,11 +95,9 @@ def iter_entries(yml: Mapping[date, Iterable]) \
         for entry in entries:
             if isinstance(entry, str):
                 yield (dt, entry, EntryType.Line)
-            elif isinstance(entry, dict):
-                for k, v in entry.items():
-                    yield (dt, k, EntryType.Dict)
-                    for l in v:
-                        yield (dt, l, EntryType.DictLine)
+            else:
+                msg = 'Bad entry for date {}: {}'.format(dt, entry)
+                raise BadEntryException(msg)
 
 
 def find_tags(line: str) -> Iterable['Token']:

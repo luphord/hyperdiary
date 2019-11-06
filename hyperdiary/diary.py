@@ -28,9 +28,6 @@ class Diary:
             # type: List[DateRange]
         self.entries = list()  # type: List[DayEntry]
 
-    def __getitem__(self, dt: date) -> DayEntry:
-        return {entry.dt: entry for entry in self.entries}[dt]
-
     def load_entries(self) -> None:
         self.entries = list()
         dates_loaded = set([])  # type: Set[date]

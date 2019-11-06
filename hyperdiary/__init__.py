@@ -5,8 +5,6 @@ __version__ = '0.4.0'
 from argparse import ArgumentParser, Namespace
 from datetime import datetime, date, timedelta
 
-import yaml
-
 from .diary import Diary
 from .check import check
 from .stats import stats
@@ -43,11 +41,11 @@ stats_parser.add_argument('file', nargs='?')
 def _stats_exec(args: Namespace) -> None:
     print('Stats\n-----')
     if args.file:
-        with open(args.file) as f:
-            entries = yaml.load(f, Loader=yaml.SafeLoader)
+        diary = Diary(dict(sources=[str(args.file)]))
+        diary.load_entries()
     else:
-        entries = Diary.discover_and_load(diary_path).entries
-    stats(entries)
+        diary = Diary.discover_and_load(diary_path)
+    stats(diary)
 
 
 stats_parser.set_defaults(func=_stats_exec)

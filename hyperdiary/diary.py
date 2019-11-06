@@ -18,6 +18,10 @@ class DayEntry:
         self.dt = dt
         self.lines = lines
 
+    def iter_lines(self):
+        for line in self.lines:
+            yield (self.dt, line)
+
 
 class Diary:
     def __init__(self, hyperdiary_json: Mapping) -> None:
@@ -45,6 +49,10 @@ class Diary:
                     self.entries.append(DayEntry(dt, lines))
                     dates_loaded.add(dt)
         self.entries.sort(key=lambda entry: entry.dt)
+
+    def iter_lines(self) -> Iterable[Tuple[date, str]]:
+        for entry in self.entries:
+            yield from entry.iter_lines()
 
     @staticmethod
     def discover(subpath: Pathlike) -> 'Diary':
@@ -94,13 +102,6 @@ class DateRange:
 
 class BadEntryException(Exception):
     pass
-
-
-def iter_entries(entries: Iterable[DayEntry]) \
-        -> Iterable[Tuple[date, str]]:
-    for entry in entries:
-        for line in entry.lines:
-            yield (entry.dt, line)
 
 
 def find_tags(line: str) -> Iterable['Token']:

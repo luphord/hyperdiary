@@ -42,7 +42,7 @@ class TestHyperdiary(unittest.TestCase):
         check(self.diary)
 
     def test_stats(self):
-        self.assertGreater(len(stats(self.diary.entries)), 3)
+        self.assertGreater(len(stats(self.diary)), 3)
 
     def test_missing_hyperdiary_json(self):
         self.assertRaises(FileNotFoundError, Diary.discover,

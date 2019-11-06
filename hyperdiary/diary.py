@@ -196,14 +196,14 @@ class Token:
         return self.text < other.text
 
 
-re_separator = re.compile(r' |;|,|\)|\.')
+_re_separator = re.compile(r' |;|,|\)|\.')
 
 
 def _fragmented_tokenize(line: str) -> Iterable[Token]:
     current = []  # type: List[str]
     current_type = TokenType.Text
     for letter in line:
-        if re_separator.match(letter):
+        if _re_separator.match(letter):
             if current:
                 yield Token(current_type, ''.join(current))
             yield Token(TokenType.Text, letter)

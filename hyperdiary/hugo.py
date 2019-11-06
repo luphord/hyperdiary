@@ -9,11 +9,11 @@ def nice_date(dt: date) -> str:
 
 
 def diary_to_hugo(diary_instance: diary.Diary, folder: diary.Pathlike) -> None:
-    entries = diary_instance.entries
     content_dir = os.path.join(str(folder), 'content')
     os.makedirs(content_dir, exist_ok=True)
 
-    for current in sorted(entries.keys()):
+    for entry in diary_instance.entries:
+        current = entry.dt
         month_dir = os.path.join(content_dir, 'post',
                                  '{:04d}'.format(current.year),
                                  '{:02d}'.format(current.month))
@@ -22,7 +22,7 @@ def diary_to_hugo(diary_instance: diary.Diary, folder: diary.Pathlike) -> None:
                                '{:02d}.md'.format(current.day)), 'w') as f:
             tags = []
             day_text = io.StringIO()
-            for line in entries[current]:
+            for line in entry.lines:
                 day_text.write('- ')
                 for token in diary.tokenize(line):
                     if token.type == diary.TokenType.Id:

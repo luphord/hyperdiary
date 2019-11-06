@@ -7,7 +7,7 @@ from tempfile import TemporaryDirectory
 
 from hyperdiary import parser, Diary
 from hyperdiary.diary import find_ids, find_tags, tokenize, \
-    iter_entries, BadEntryException
+    BadEntryException
 from hyperdiary.check import check
 from hyperdiary.stats import stats
 from hyperdiary.html import diary_to_html, diary_to_html_folder
@@ -51,12 +51,7 @@ class TestHyperdiary(unittest.TestCase):
     def test_bad_entries(self):
         path = in_test_folder('src/2019/05_bad_entries.yaml')
         diary = Diary(dict(sources=[str(path)]))
-        diary.load_entries()
-
-        def _iter_entries():
-            list(iter_entries(diary.entries))
-
-        self.assertRaises(BadEntryException, _iter_entries)
+        self.assertRaises(BadEntryException, diary.load_entries)
 
     def test_tokenization(self):
         line = '+tag A $test-line by $Jane_Doe|Jane; expect no content +hallo'

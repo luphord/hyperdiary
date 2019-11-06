@@ -79,18 +79,14 @@ def diary_to_html(diary_instance: diary.Diary, fname: str) -> None:
     content = div(h1('Entries'))
     entries_html = content.subelement(div())
 
-    for current in sorted(entries.keys()):
-        entries_html.append(day_to_html(current, entries[current],
+    for entry in entries:
+        entries_html.append(day_to_html(entry.dt, entry.lines,
                                         lambda ref: '#'))
 
     wrap_html_page(content, title='Diary').write(fname)
 
 
 def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
-    entries = diary_instance.entries
-    all_dates = list(entries.keys())
-    all_dates.sort()
-
     root_path = AbsolutePath('/')
     entries_path = AbsolutePath('/entries')
     ids_path = AbsolutePath('/ids')
@@ -102,17 +98,20 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
 
     identifiers = defaultdict(list)  # type: Dict[diary.Token, list]
 
-    for year, dates in groupby(all_dates, lambda d: d.year):
+    for year, year_entries in groupby(diary_instance.entries,
+                                      lambda entry: entry.dt.year):
         year_path = entries_path + rel_path(year)
         year_ul = ul()
 
-        for month, dates in groupby(dates, lambda d: d.month):
+        for month, month_entries in groupby(year_entries,
+                                            lambda entry: entry.dt.month):
             s_month = '{:02d}'.format(month)
             month_path = year_path + rel_path(s_month)
             month_html = div(h1('{} {}'.format(MONTH_NAMES[month-1], year)))
             month_ul = month_html.subelement(ul())
 
-            for current in dates:
+            for entry in month_entries:
+                current = entry.dt
                 s_day = '{:02d}'.format(current.day)
                 day_path = month_path + rel_path(s_day)
                 day_folder = folder_from_path(day_path)
@@ -123,7 +122,7 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
                         'Got invalid identifier {}'.format(sid)
                     return str(ids_path + rel_path(sid) - day_path)
 
-                day_html = day_to_html(current, entries[current],
+                day_html = day_to_html(current, entry.lines,
                                        link_to_id_fn)
 
                 foot = div(_class='flex four')
@@ -143,8 +142,7 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
                 wrap_html_page(day_html, level=4).write(index_path)
                 append_li_a(month_ul, str(current), str(day_path - month_path))
 
-                for dt, e in diary.iter_entries(
-                        {current: entries[current]}):
+                for dt, e in diary.iter_entries([entry]):
                     for identifier in diary.find_ids(e):
                         identifiers[identifier].append(dt)
 

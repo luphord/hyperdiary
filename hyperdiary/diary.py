@@ -5,9 +5,18 @@ import yaml
 import json
 from pathlib import Path
 from typing import Union, Tuple, Mapping, Iterable, Iterator
-from typing import Dict, List, Optional  # noqa: F401
+from typing import Dict, Set, List, Optional  # noqa: F401
 
 Pathlike = Union[Path, str]
+
+
+class DayEntry:
+    '''Diary entry for a specific date, contains multiple
+       lines of text.
+    '''
+    def __init__(self, dt: date, lines: List[str]):
+        self.dt = dt
+        self.lines = lines
 
 
 class Diary:
@@ -17,18 +26,28 @@ class Diary:
         self.expected = [DateRange.from_json(obj)
                          for obj in j.get('expected', [])] \
             # type: List[DateRange]
-        self.entries = dict()  # type: Dict[date, List[str]]
+        self.entries = list()  # type: List[DayEntry]
+
+    def __getitem__(self, dt: date) -> DayEntry:
+        return {entry.dt: entry for entry in self.entries}[dt]
 
     def load_entries(self) -> None:
-        self.entries = dict()
+        self.entries = list()
+        dates_loaded = set([])  # type: Set[date]
         for fname in self.sources:
             with open(fname) as f:
-                for dt, entry in yaml.load(f, Loader=yaml.SafeLoader).items():
-                    if dt in self.entries:
+                for dt, lines in yaml.load(f, Loader=yaml.SafeLoader).items():
+                    if not isinstance(lines, list) or \
+                            any(not isinstance(line, str) for line in lines):
+                        msg = 'Bad entry for date {}: {}'.format(dt, lines)
+                        raise BadEntryException(msg)
+                    if dt in dates_loaded:
                         msg = 'Double definition for {0} in file {1}' \
                               .format(dt, fname)
                         raise Exception(msg)
-                    self.entries[dt] = entry
+                    self.entries.append(DayEntry(dt, lines))
+                    dates_loaded.add(dt)
+        self.entries.sort(key=lambda entry: entry.dt)
 
     @staticmethod
     def discover(subpath: Pathlike) -> 'Diary':
@@ -80,17 +99,11 @@ class BadEntryException(Exception):
     pass
 
 
-def iter_entries(yml: Mapping[date, Iterable[str]]) \
+def iter_entries(entries: Iterable[DayEntry]) \
         -> Iterable[Tuple[date, str]]:
-    for dt, entries in yml.items():
-        # dt = datetime.strptime(dt, '%Y-%m-%d').date() not required,
-        # apparently already parsed to date object
-        for entry in entries:
-            if isinstance(entry, str):
-                yield (dt, entry)
-            else:
-                msg = 'Bad entry for date {}: {}'.format(dt, entry)
-                raise BadEntryException(msg)
+    for entry in entries:
+        for line in entry.lines:
+            yield (entry.dt, line)
 
 
 def find_tags(line: str) -> Iterable['Token']:

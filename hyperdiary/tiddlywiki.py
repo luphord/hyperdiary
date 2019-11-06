@@ -104,9 +104,8 @@ def nice_date(dt: date) -> str:
 
 
 def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
-    entries = diary_instance.entries
-    for dt in sorted(entries.keys()):
-        yield Tiddler.from_entry(dt, entries[dt])
+    for entry in diary_instance.entries:
+        yield Tiddler.from_entry(entry.dt, entry.lines)
     # ToDo: add additional (system) tiddlers
     # yield Tiddler(title='$:/DefaultTiddlers', fname='defaultxxx',
     #               text='[[10.06.2019]]')

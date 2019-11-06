@@ -139,7 +139,7 @@ _REPLACEMENTS = {
 }
 
 
-def make_id(sid: str) -> str:
+def _make_id(sid: str) -> str:
     sid = sid.lower()
     for k, v in _REPLACEMENTS.items():
         sid = sid.replace(k, v)
@@ -159,7 +159,7 @@ def _capitalize(s: str) -> Iterable[str]:
             yield letter
 
 
-def beautify_id(sid: str) -> str:
+def _beautify_id(sid: str) -> str:
     return ''.join(_capitalize(sid.replace('_', ' ')))
 
 
@@ -171,8 +171,8 @@ class Token:
         if type == TokenType.Id:
             if not ref:
                 s = text.split('|', 1)
-                self.text = beautify_id(s[1] if len(s) == 2 else s[0])
-                self.ref = make_id(s[0])
+                self.text = _beautify_id(s[1] if len(s) == 2 else s[0])
+                self.ref = _make_id(s[0])
 
     def __repr__(self) -> str:
         return 'Token({0}, "{1}", "{2}")'.format(self.type, self.text,

@@ -194,7 +194,7 @@ class Token:
         return self.text < other.text
 
 
-re_separator = re.compile(' |;|,|\\.')
+re_separator = re.compile(r' |;|,|\)|\.')
 
 
 def _fragmented_tokenize(line: str) -> Iterable[Token]:

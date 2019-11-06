@@ -58,6 +58,9 @@ class TestHyperdiary(unittest.TestCase):
         self.assertEqual(2, len(find_tags(line)))
         self.assertEqual(2, len(find_ids(line)))
         self.assertEqual(7, len(list(tokenize(line))))
+        line = '$just_an_id)'
+        self.assertEqual(1, len(find_ids(line)))
+        self.assertEqual(2, len(list(tokenize(line))))
 
     def test_html_export(self):
         with TemporaryDirectory() as folder:

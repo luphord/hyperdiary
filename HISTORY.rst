@@ -2,6 +2,13 @@
 History
 =======
 
+0.5.0 (2019-11-06)
+------------------
+
+* removed EntryType, refactored iteration, primarily passing Diary instances around
+* fix bug when an ID is followed by a bracket )
+* only line entries are allowed, no more dicts
+
 0.4.0 (2019-10-30)
 ------------------
 

@@ -111,14 +111,15 @@ def find_tags(line: str) -> Iterable['Token']:
     >>> res == ["tag1", "tag2", "tag3"]
     True
     '''
-    return find(line, TokenType.Tag)
+    return find_token_of_type(line, TokenType.Tag)
 
 
 def find_ids(line: str) -> Iterable['Token']:
-    return find(line, TokenType.Id)
+    return find_token_of_type(line, TokenType.Id)
 
 
-def find(line: str, token_type: 'TokenType') -> Iterable['Token']:
+def find_token_of_type(line: str, token_type: 'TokenType') \
+        -> Iterable['Token']:
     return [token for token in tokenize(line) if token.type == token_type]
 
 

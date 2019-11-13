@@ -1,6 +1,5 @@
 import os
 from datetime import timedelta, date
-from itertools import groupby
 from collections import defaultdict
 from typing import Iterable, Dict, Union, Callable, Optional  # noqa: F401
 from . import diary
@@ -98,13 +97,11 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
 
     identifiers = defaultdict(list)  # type: Dict[diary.Token, list]
 
-    for year, year_entries in groupby(diary_instance.entries,
-                                      lambda entry: entry.dt.year):
+    for year, year_group in diary_instance.iter_entries_by_year_and_month():
         year_path = entries_path + rel_path(year)
         year_ul = ul()
 
-        for month, month_entries in groupby(year_entries,
-                                            lambda entry: entry.dt.month):
+        for month, month_entries in year_group:
             s_month = '{:02d}'.format(month)
             month_path = year_path + rel_path(s_month)
             month_html = div(h1('{} {}'.format(MONTH_NAMES[month-1], year)))

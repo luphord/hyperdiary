@@ -3,6 +3,8 @@ import enum
 from datetime import datetime, date, timedelta
 import yaml
 import json
+from itertools import groupby
+from collections import defaultdict
 from pathlib import Path
 from typing import Union, Tuple, Mapping, Iterable, Iterator
 from typing import Dict, Set, List, Optional  # noqa: F401
@@ -53,6 +55,22 @@ class Diary:
     def iter_lines(self) -> Iterable[Tuple[date, str]]:
         for entry in self.entries:
             yield from entry.iter_lines()
+
+    def iter_entries_by_year_and_month(self) \
+            -> Iterable[Tuple[int, Iterable[Tuple[int, Iterable[DayEntry]]]]]:
+        for year, year_entries in groupby(self.entries,
+                                          lambda entry: entry.dt.year):
+            yield year, groupby(year_entries,
+                                lambda entry: entry.dt.month)
+
+    def nested_dicts_by_year_and_month(self) \
+            -> Mapping[int, Mapping[int, Mapping[date, DayEntry]]]:
+        d = defaultdict(lambda: defaultdict(dict)) \
+            # type: Dict[int, Dict[int, Dict[date, DayEntry]]]
+        for year, year_group in self.iter_entries_by_year_and_month():
+            for month, month_entries in year_group:
+                d[year][month] = {entry.dt: entry for entry in month_entries}
+        return d
 
     @staticmethod
     def discover(subpath: Pathlike) -> 'Diary':

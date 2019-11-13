@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+from datetime import date
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -43,6 +44,21 @@ class TestHyperdiary(unittest.TestCase):
 
     def test_stats(self):
         self.assertGreater(len(stats(self.diary)), 3)
+
+    def test_iteration_by_month(self):
+        entries = self.diary.nested_dicts_by_year_and_month()
+        self.assertIn(2019, entries)
+        self.assertIn(5, entries[2019])
+        self.assertIn(6, entries[2019])
+        self.assertIn(date(2019, 6, 9), entries[2019][6])
+        self.assertIn(date(2019, 6, 10), entries[2019][6])
+        cnt = 0
+        for year, year_group in self.diary.iter_entries_by_year_and_month():
+            for month, month_entries in year_group:
+                for entry in month_entries:
+                    cnt += 1
+        self.assertGreaterEqual(cnt, 3)
+        self.assertEqual(cnt, len(self.diary.entries))
 
     def test_missing_hyperdiary_json(self):
         self.assertRaises(FileNotFoundError, Diary.discover,

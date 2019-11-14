@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Union, Tuple, Mapping, Iterable, Iterator
 from typing import Dict, Set, List, Optional  # noqa: F401
 
+from .localization import Localization
+
 Pathlike = Union[Path, str]
 
 
@@ -33,6 +35,7 @@ class Diary:
                          for obj in j.get('expected', [])] \
             # type: List[DateRange]
         self.entries = list()  # type: List[DayEntry]
+        self.localization = Localization(j.get('localization', {}))
 
     def load_entries(self) -> None:
         self.entries = list()

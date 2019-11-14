@@ -90,6 +90,8 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
     entries_path = AbsolutePath('/entries')
     ids_path = AbsolutePath('/ids')
 
+    loc = diary_instance.localization
+
     def folder_from_path(p: AbsolutePath) -> str:
         return os.path.join(folder, str(p - root_path))
 
@@ -104,7 +106,7 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
         for month, month_entries in year_group:
             s_month = '{:02d}'.format(month)
             month_path = year_path + rel_path(s_month)
-            month_html = div(h1('{} {}'.format(MONTH_NAMES[month-1], year)))
+            month_html = div(h1('{} {}'.format(loc.get_month(month-1), year)))
             month_ul = month_html.subelement(ul())
 
             for entry in month_entries:
@@ -146,7 +148,7 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
             index_path = os.path.join(folder_from_path(month_path),
                                       'index.html')
             wrap_html_page(month_html, level=3).write(index_path)
-            append_li_a(year_ul, MONTH_NAMES[month-1], s_month)
+            append_li_a(year_ul, loc.get_month(month-1), s_month)
 
         index_path = os.path.join(folder_from_path(year_path), 'index.html')
         wrap_html_page(year_ul, level=2).write(index_path)
@@ -175,11 +177,6 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
     shutil.rmtree(os.path.join(folder, 'assets'), ignore_errors=True)
     shutil.copytree(os.path.join(os.path.dirname(__file__), 'assets'),
                     os.path.join(folder, 'assets'))
-
-
-MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
-               'July', 'August', 'September', 'October', 'November',
-               'December']
 
 
 def rel_path(spath: Union[date, str, int]) -> RelativePath:

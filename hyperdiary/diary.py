@@ -20,7 +20,7 @@ class DayEntry:
         self.dt = dt
         self.lines = lines
 
-    def iter_lines(self):
+    def iter_lines(self) -> Iterable[Tuple[date, str]]:
         for line in self.lines:
             yield (self.dt, line)
 

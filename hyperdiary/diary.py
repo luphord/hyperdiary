@@ -35,7 +35,7 @@ class Diary:
                          for obj in j.get('expected', [])] \
             # type: List[DateRange]
         self.entries = list()  # type: List[DayEntry]
-        self.localization = Localization(j.get('localization', {}))
+        self.localization = Localization(**j.get('localization', {}))
 
     def load_entries(self) -> None:
         self.entries = list()

@@ -1,4 +1,4 @@
-from typing import Mapping, List  # noqa: F401
+from typing import List
 
 MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June',
              'July', 'August', 'September', 'October', 'November',
@@ -6,8 +6,8 @@ MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June',
 
 
 class Localization:
-    def __init__(self, j: Mapping={}) -> None:
-        self.months = j.get('months', MONTHS_EN)  # type: List[str]
+    def __init__(self, months: List[str]=MONTHS_EN) -> None:
+        self.months = months
 
     def get_month(self, i: int) -> str:
         '''Get the localized name of month i (zero-based index)

@@ -39,6 +39,9 @@ class TestHyperdiary(unittest.TestCase):
     def test_diary_without_expected(self):
         Diary({})
 
+    def test_localization_loaded(self):
+        self.assertEqual('Aug', self.diary.localization.get_month(7))
+
     def test_check(self):
         check(self.diary)
 

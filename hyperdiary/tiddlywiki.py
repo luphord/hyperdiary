@@ -115,7 +115,7 @@ def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
                                              diary_instance.localization)
                 tiddler_titles.append(tiddler.title)
                 yield tiddler
-            month_name = loc.get_month(month)
+            month_name = loc.get_month(month - 1)
             title = '{} {}'.format(month_name, year)
             text = '\n'.join('[[{}]]'.format(ttl) for ttl in tiddler_titles)
             text += '\n' + cal.formatmonth(year, month, withyear=False)

@@ -102,6 +102,7 @@ class Tiddler:
 
 
 def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
+    loc = diary_instance.localization
     year_titles = []
     for year, year_group in diary_instance.iter_entries_by_year_and_month():
         month_titles = []
@@ -112,12 +113,14 @@ def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
                                              diary_instance.localization)
                 tiddler_titles.append(tiddler.title)
                 yield tiddler
-            title = '{}-{}'.format(year, month)
+            month_name = loc.get_month(month)
+            title = '{} {}'.format(month_name, year)
             text = '\n'.join('[[{}]]'.format(ttl) for ttl in tiddler_titles)
             yield Tiddler(fname=title, title=title, text=text)
-            month_titles.append(title)
+            month_titles.append((month_name, title))
         title = '{}'.format(year)
-        text = '\n'.join('[[{}]]'.format(ttl) for ttl in month_titles)
+        text = '\n'.join('[[{}|{}]]'.format(month_name, ttl)
+                         for month_name, ttl in month_titles)
         yield Tiddler(fname=title, title=title, text=text)
         year_titles.append(title)
     title = 'Home'

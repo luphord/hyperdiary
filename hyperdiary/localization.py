@@ -7,6 +7,7 @@ MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June',
 
 class Localization:
     def __init__(self, months: List[str]=MONTHS_EN) -> None:
+        assert len(months) == 12
         self.months = months
 
     def get_month(self, i: int) -> str:
@@ -20,6 +21,15 @@ class Localization:
            Traceback (most recent call last):
            ...
            AssertionError
+           >>> Localization(months=['Just January'])
+           Traceback (most recent call last):
+           ...
+           AssertionError
+           >>> l2 = Localization(months=list('123456789ond'))
+           >>> l2.get_month(3)
+           '4'
+           >>> l2.get_month(10)
+           'n'
         '''
         assert i >= 0
         assert i < 12

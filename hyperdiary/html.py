@@ -3,6 +3,7 @@ from datetime import timedelta, date
 from collections import defaultdict
 from typing import Iterable, Dict, Union, Callable, Optional  # noqa: F401
 from . import diary
+from .localization import Localization
 from .simplepath import AbsolutePath, RelativePath
 from .htmltags import article, header, head, h1, h4, ul, li, a, span, div, \
     footer, meta, link, style, html, body, title, HTMLElement, HTMLContent
@@ -25,15 +26,12 @@ def wrap_page(body_content: HTMLContent, page_title: str=None,
     return html(h, body(body_content))
 
 
-def nice_date(dt: date) -> str:
-    return dt.strftime("%d.%m.%Y")
-
-
 def day_to_html(current: date, entry: Iterable[str],
+                localization: Localization,
                 link_to_id_fn: Callable[[Optional[str]], str]=None) \
         -> HTMLElement:
     day = article(_class='card', _id=str(path_for_date(current)))(
-                header(h4(nice_date(current)))
+                header(h4(localization.format_date(current)))
             )
     day_list = day.subelement(ul())
     for e in entry:
@@ -80,6 +78,7 @@ def diary_to_html(diary_instance: diary.Diary, fname: str) -> None:
 
     for entry in entries:
         entries_html.append(day_to_html(entry.dt, entry.lines,
+                                        diary_instance.localization,
                                         lambda ref: '#'))
 
     wrap_html_page(content, title='Diary').write(fname)
@@ -122,6 +121,7 @@ def diary_to_html_folder(diary_instance: diary.Diary, folder: str) -> None:
                     return str(ids_path + rel_path(sid) - day_path)
 
                 day_html = day_to_html(current, entry.lines,
+                                       diary_instance.localization,
                                        link_to_id_fn)
 
                 foot = div(_class='flex four')

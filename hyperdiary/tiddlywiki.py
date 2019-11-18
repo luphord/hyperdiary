@@ -5,6 +5,7 @@ import unicodedata
 from datetime import date
 from typing import Union, Iterable, Iterator, Tuple
 from . import diary
+from .localization import Localization
 
 
 def make_tiddler_filename(o: Union[str, date]) -> str:
@@ -71,7 +72,8 @@ class Tiddler:
         return '<div {}>\n<pre>\n{}\n</pre>\n</div>'.format(args, self.text)
 
     @staticmethod
-    def from_entry(dt: date, entry: Iterable[str]) -> 'Tiddler':
+    def from_entry(dt: date, entry: Iterable[str],
+                   localization: Localization) -> 'Tiddler':
         tags = []
         day_text = io.StringIO()
         for line in entry:
@@ -90,17 +92,13 @@ class Tiddler:
         compact_date = '{:04d}{:02d}{:02d}1200000000'.format(dt.year, dt.month,
                                                              dt.day)
 
-        fields = dict(title=nice_date(dt),
+        fields = dict(title=localization.format_date(dt),
                       text=day_text.read(),
                       tags=' '.join(sorted(set(tags))),
                       created=compact_date,
                       modified=compact_date)
 
         return Tiddler(make_tiddler_filename(dt), **fields)
-
-
-def nice_date(dt: date) -> str:
-    return dt.strftime("%d.%m.%Y")
 
 
 def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
@@ -110,7 +108,8 @@ def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
         for month, month_entries in year_group:
             tiddler_titles = []
             for entry in month_entries:
-                tiddler = Tiddler.from_entry(entry.dt, entry.lines)
+                tiddler = Tiddler.from_entry(entry.dt, entry.lines,
+                                             diary_instance.localization)
                 tiddler_titles.append(tiddler.title)
                 yield tiddler
             title = '{}-{}'.format(year, month)

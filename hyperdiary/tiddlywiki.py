@@ -3,6 +3,7 @@ import io
 import re
 import unicodedata
 from datetime import date
+from calendar import HTMLCalendar
 from typing import Union, Iterable, Iterator, Tuple
 from . import diary
 from .localization import Localization
@@ -103,6 +104,7 @@ class Tiddler:
 
 def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
     loc = diary_instance.localization
+    cal = HTMLCalendar()
     year_titles = []
     for year, year_group in diary_instance.iter_entries_by_year_and_month():
         month_titles = []
@@ -116,6 +118,7 @@ def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
             month_name = loc.get_month(month)
             title = '{} {}'.format(month_name, year)
             text = '\n'.join('[[{}]]'.format(ttl) for ttl in tiddler_titles)
+            text += '\n' + cal.formatmonth(year, month, withyear=False)
             yield Tiddler(fname=title, title=title, text=text)
             month_titles.append((month_name, title))
         title = '{}'.format(year)

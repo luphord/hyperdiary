@@ -42,7 +42,7 @@ class TestHyperdiary(unittest.TestCase):
     def test_localization_loaded(self):
         loc = self.diary.localization
         self.assertEqual('Aug', loc.get_month(7))
-        self.assertEqual('03.11.2019', loc.format_date(date(2019, 11, 3)))
+        self.assertEqual('3.11.2019', loc.format_date(date(2019, 11, 3)))
 
     def test_check(self):
         check(self.diary)

@@ -10,6 +10,10 @@ from .localization import Localization
 
 
 class _HREFCalendar(HTMLCalendar):
+
+    LINKFMT = '<a class="tc-tiddlylink tc-tiddlylink-resolves" ' \
+              'href="#{}">{}</a>'
+
     def __init__(self,
                  tiddler_titles: Iterable[Tuple[int, str]],
                  firstweekday: int=0) -> None:
@@ -20,7 +24,7 @@ class _HREFCalendar(HTMLCalendar):
         daycls = self.cssclasses[weekday]  # type: ignore
         daystr = str(day) if day > 0 else '&nbsp;'
         if day in self.links:
-            daystr = '<a href="#{}">{}</a>'.format(self.links[day], daystr)
+            daystr = self.LINKFMT.format(self.links[day], daystr)
         return '<td class="{}">{}</td>'.format(daycls, daystr)
 
 

@@ -3,16 +3,13 @@ import io
 import re
 import unicodedata
 from datetime import date
-from calendar import HTMLCalendar
-from typing import Union, Iterable, Iterator, Tuple
+from calendar import TextCalendar
+from typing import Union, Iterable, Iterator, Tuple, Any
 from . import diary
 from .localization import Localization
 
 
-class _HREFCalendar(HTMLCalendar):
-
-    LINKFMT = '<a class="tc-tiddlylink tc-tiddlylink-resolves" ' \
-              'href="#{}">{}</a>'
+class _TiddlerCalendar(TextCalendar):
 
     def __init__(self,
                  tiddler_titles: Iterable[Tuple[int, str]],
@@ -20,12 +17,26 @@ class _HREFCalendar(HTMLCalendar):
         super().__init__(firstweekday=firstweekday)
         self.links = {day: ttl for day, ttl in tiddler_titles}
 
-    def formatday(self, day: int, weekday: int) -> str:
-        daycls = self.cssclasses[weekday]  # type: ignore
-        daystr = str(day) if day > 0 else '&nbsp;'
+    def formatday(self, day: int, weekday: int, width: int) -> str:
+        daystr = str(day) if day > 0 else ''
         if day in self.links:
-            daystr = self.LINKFMT.format(self.links[day], daystr)
-        return '<td class="{}">{}</td>'.format(daycls, daystr)
+            daystr = '[[{}|{}]]'.format(daystr, self.links[day])
+        return daystr
+
+    def formatweekheader(self, width: int) -> str:
+        header = ' | '.join(self.formatweekday(i, width)
+                            for i in self.iterweekdays())
+        return '|{}|h'.format(header)
+
+    def formatweek(self,
+                   theweek: Any,
+                   width: int) -> str:
+        w = ' | '.join(self.formatday(d, wd, width) for (d, wd) in theweek)
+        return '|{}|'.format(w)
+
+    def formatmonthname(self, theyear: int, themonth: int, width: int,
+                        withyear: bool=True) -> str:
+        return ''
 
 
 def make_tiddler_filename(o: Union[str, date]) -> str:
@@ -135,8 +146,8 @@ def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
                 yield tiddler
             month_name = loc.get_month(month - 1)
             title = '{} {}'.format(month_name, year)
-            cal = _HREFCalendar(tiddler_titles)
-            text = cal.formatmonth(year, month, withyear=True)
+            cal = _TiddlerCalendar(tiddler_titles)
+            text = cal.formatmonth(year, month)
             yield Tiddler(fname=title, title=title, text=text)
             month_titles.append((month_name, title))
         title = '{}'.format(year)

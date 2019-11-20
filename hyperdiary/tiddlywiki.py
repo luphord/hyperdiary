@@ -9,6 +9,21 @@ from . import diary
 from .localization import Localization
 
 
+class _HREFCalendar(HTMLCalendar):
+    def __init__(self,
+                 tiddler_titles: Iterable[Tuple[int, str]],
+                 firstweekday: int=0) -> None:
+        super().__init__(firstweekday=firstweekday)
+        self.links = {day: ttl for day, ttl in tiddler_titles}
+
+    def formatday(self, day: int, weekday: int) -> str:
+        daycls = self.cssclasses[weekday]  # type: ignore
+        daystr = str(day) if day > 0 else '&nbsp;'
+        if day in self.links:
+            daystr = '<a href="#{}">{}</a>'.format(self.links[day], daystr)
+        return '<td class="{}">{}</td>'.format(daycls, daystr)
+
+
 def make_tiddler_filename(o: Union[str, date]) -> str:
     '''
     >>> make_tiddler_filename("Frühstück Ähre Grüße Föhn")
@@ -104,7 +119,6 @@ class Tiddler:
 
 def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
     loc = diary_instance.localization
-    cal = HTMLCalendar()
     year_titles = []
     for year, year_group in diary_instance.iter_entries_by_year_and_month():
         month_titles = []
@@ -113,12 +127,12 @@ def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
             for entry in month_entries:
                 tiddler = Tiddler.from_entry(entry.dt, entry.lines,
                                              diary_instance.localization)
-                tiddler_titles.append(tiddler.title)
+                tiddler_titles.append((entry.dt.day, tiddler.title))
                 yield tiddler
             month_name = loc.get_month(month - 1)
             title = '{} {}'.format(month_name, year)
-            text = '\n'.join('[[{}]]'.format(ttl) for ttl in tiddler_titles)
-            text += '\n' + cal.formatmonth(year, month, withyear=False)
+            cal = _HREFCalendar(tiddler_titles)
+            text = cal.formatmonth(year, month, withyear=True)
             yield Tiddler(fname=title, title=title, text=text)
             month_titles.append((month_name, title))
         title = '{}'.format(year)

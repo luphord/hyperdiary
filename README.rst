@@ -40,13 +40,13 @@ A project file *hyperdiary.json* is required to setup your diary. It should be o
                         {"start": "2019-06-09", "end": "2019-06-10"}
                 ],
                 "localization": {
-                "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                "date_fmt": "%-d.%-m.%Y"
+                        "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                        "date_fmt": "%-d.%-m.%Y"
                 }
         }
 
-You diary content itself is entered in yaml files like this:
+You diary content itself is entered in yaml files like this (2019/06.yaml):
 
 .. code-block:: yaml
 
@@ -57,6 +57,8 @@ You diary content itself is entered in yaml files like this:
         2019-06-10:
           - Same $special_identity|link again and $New_Identity|NewIdentity
           - $test +mytag
+
+Use *$target|linktext* to create a hyperlink to *target* showing text *linktext*. Use *+mytag* to add tag *mytag*.
 
 Usage
 -----
@@ -70,16 +72,16 @@ Usage
         The hyperdiary main command line interface.
 
         optional arguments:
-        -h, --help            show this help message and exit
+                -h, --help            show this help message and exit
 
         subcommands:
-        {check,stats,html,htmlfolder,hugo,tiddlers,tiddlywiki,view}
-                                Available subcommands
-        check               Check entire diary for integrity up-to-dateness
-        stats               Calculate impressive diary statistics
-        html                Export diary to html
-        htmlfolder          Export diary to html in folders
-        hugo                Export diary to hugo static site format
-        tiddlers            Export diary to tiddlywiki tiddlers format
-        tiddlywiki          Export diary to tiddlywiki
-        view                View entries on command line
+                {check,stats,html,htmlfolder,hugo,tiddlers,tiddlywiki,view}
+                                        Available subcommands
+                check               Check entire diary for integrity up-to-dateness
+                stats               Calculate impressive diary statistics
+                html                Export diary to html
+                htmlfolder          Export diary to html in folders
+                hugo                Export diary to hugo static site format
+                tiddlers            Export diary to tiddlywiki tiddlers format
+                tiddlywiki          Export diary to tiddlywiki
+                view                View entries on command line

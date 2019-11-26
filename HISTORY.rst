@@ -2,6 +2,13 @@
 History
 =======
 
+0.6.0 (not yet)
+---------------
+
+* introduced localization using hyperdiary.json; date format and month names so far
+* added tiddlers for month (calendar) and year overview with hyperlinks
+* Diary supports iteration by year/month
+
 0.5.0 (2019-11-06)
 ------------------
 

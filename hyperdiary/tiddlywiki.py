@@ -13,9 +13,11 @@ class _TiddlerCalendar(TextCalendar):
 
     def __init__(self,
                  tiddler_titles: Iterable[Tuple[int, str]],
+                 loc: Localization,
                  firstweekday: int=0) -> None:
         super().__init__(firstweekday=firstweekday)
         self.links = {day: ttl for day, ttl in tiddler_titles}
+        self.loc = loc
 
     def formatday(self, day: int, weekday: int, width: int) -> str:
         daystr = str(day) if day > 0 else ''
@@ -24,7 +26,8 @@ class _TiddlerCalendar(TextCalendar):
         return daystr
 
     def formatweekheader(self, width: int) -> str:
-        header = ' | '.join(self.formatweekday(i, width)
+        header = ' | '.join(self.loc.get_day_short(
+                            i - self.getfirstweekday() % 7)
                             for i in self.iterweekdays())
         return '|{}|h'.format(header)
 
@@ -146,7 +149,7 @@ def diary_to_tiddlers(diary_instance: diary.Diary) -> Iterator[Tiddler]:
                 yield tiddler
             month_name = loc.get_month(month - 1)
             title = '{} {}'.format(month_name, year)
-            cal = _TiddlerCalendar(tiddler_titles)
+            cal = _TiddlerCalendar(tiddler_titles, loc)
             text = cal.formatmonth(year, month)
             yield Tiddler(fname=title, title=title, text=text)
             month_titles.append((month_name, title))

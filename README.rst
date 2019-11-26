@@ -8,8 +8,8 @@ hyperdiary
 .. image:: https://img.shields.io/travis/luphord/hyperdiary.svg
         :target: https://travis-ci.org/luphord/hyperdiary
 
-.. image:: https://readthedocs.org/projects/imgwrench/badge/?version=latest
-        :target: https://imgwrench.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/hyperdiary/badge/?version=latest
+        :target: https://hyperdiary.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 A command line tool for writing diaries with hyperlinks. Free software, licensed under MIT license.
@@ -46,7 +46,7 @@ A project file *hyperdiary.json* is required to setup your diary. It should be o
                 }
         }
 
-You diary content itself is entered in yaml files like this (2019/06.yaml):
+You diary content itself is entered in yaml files like this (*2019/06.yaml*):
 
 .. code-block:: yaml
 

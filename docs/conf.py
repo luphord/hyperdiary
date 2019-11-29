@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Image Wrench'
+project = u'hyperdiary'
 copyright = u"2019, luphord"
 author = u"luphord"
 
@@ -131,7 +131,7 @@ latex_elements = {
 # [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'hyperdiary.tex',
-     u'Image Wrench Documentation',
+     u'hyperdiary Documentation',
      u'luphord', 'manual'),
 ]
 
@@ -142,7 +142,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'hyperdiary',
-     u'Image Wrench Documentation',
+     u'hyperdiary Documentation',
      [author], 1)
 ]
 
@@ -154,7 +154,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'hyperdiary',
-     u'Image Wrench Documentation',
+     u'hyperdiary Documentation',
      author,
      'hyperdiary',
      'One line description of project.',

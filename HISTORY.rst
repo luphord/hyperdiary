@@ -2,8 +2,8 @@
 History
 =======
 
-0.6.0 (not yet)
----------------
+0.6.0 (2019-11-29)
+------------------
 
 * promote status to alpha
 * introduced localization using hyperdiary.json; date format and month names so far

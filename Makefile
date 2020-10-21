@@ -57,7 +57,7 @@ lint: ## check style with flake8
 	flake8 hyperdiary tests
 
 test: ## run tests quickly with the default Python
-	python setup.py test
+	python -m unittest discover . -v
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source hyperdiary setup.py test

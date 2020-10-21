@@ -44,7 +44,7 @@ class _TiddlerCalendar(TextCalendar):
 
 def make_tiddler_filename(o: Union[str, date]) -> str:
     '''
-    >>> make_tiddler_filename("Frühstück Ähre Grüße Föhn")
+    >>> make_tiddler_filename(" Frühstück Ähre Grüße Föhn")
     'fruehstueck-aehre-gruesse-foehn.tid'
     >>> make_tiddler_filename("a.v-_'üöß' tiddler")
     'av-_ueoess-tiddler.tid'
@@ -59,8 +59,8 @@ def make_tiddler_filename(o: Union[str, date]) -> str:
              .replace('ü', 'ue')
         s = unicodedata.normalize('NFKD', s)
         s = s.encode('ascii', 'ignore').decode('ascii')
-        s = re.sub('[^\w\s-]', '', s).strip()
-        s = re.sub('[-\s]+', '-', s)
+        s = re.sub(r'[^\w\s-]', '', s).strip()
+        s = re.sub(r'[-\s]+', '-', s)
     elif isinstance(o, date):
         s = '{:04d}-{:02d}-{:02d}'.format(o.year, o.month, o.day)
     else:

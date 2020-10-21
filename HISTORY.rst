@@ -2,6 +2,14 @@
 History
 =======
 
+0.6.1 (2020-10-21)
+------------------
+
+* add support for Python 3.8
+* upgrade to flake8 3.8.4 and fix linter issues
+* replace deprecated test command
+* move to travis-ci.com
+
 0.6.0 (2019-11-29)
 ------------------
 

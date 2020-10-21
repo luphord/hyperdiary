@@ -14,7 +14,7 @@ class _TiddlerCalendar(TextCalendar):
     def __init__(self,
                  tiddler_titles: Iterable[Tuple[int, str]],
                  loc: Localization,
-                 firstweekday: int=0) -> None:
+                 firstweekday: int = 0) -> None:
         super().__init__(firstweekday=firstweekday)
         self.links = {day: ttl for day, ttl in tiddler_titles}
         self.loc = loc
@@ -38,7 +38,7 @@ class _TiddlerCalendar(TextCalendar):
         return '|{}|'.format(w)
 
     def formatmonthname(self, theyear: int, themonth: int, width: int,
-                        withyear: bool=True) -> str:
+                        withyear: bool = True) -> str:
         return ''
 
 

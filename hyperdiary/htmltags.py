@@ -36,7 +36,8 @@ class HTMLElement(object):
                 yield str(v)
                 yield '"'
 
-    def lazy_render(self, indent: str='', add_indent: str='') -> Iterable[str]:
+    def lazy_render(self, indent: str = '', add_indent: str = '') \
+            -> Iterable[str]:
         is_doc_root = self.tag.lower() == 'html'
         if is_doc_root:
             yield '<!DOCTYPE HTML>\n'

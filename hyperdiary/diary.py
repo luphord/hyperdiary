@@ -91,7 +91,7 @@ class Diary:
             return Diary(hyperdiary_json)
 
     @staticmethod
-    def discover_and_load(path: Pathlike='.') -> 'Diary':
+    def discover_and_load(path: Pathlike = '.') -> 'Diary':
         diary = Diary.discover(path)
         diary.load_entries()
         return diary
@@ -186,7 +186,7 @@ def _beautify_id(sid: str) -> str:
 
 
 class Token:
-    def __init__(self, type: TokenType, text: str, ref: str=None) -> None:
+    def __init__(self, type: TokenType, text: str, ref: str = None) -> None:
         self.type = type
         self.text = text
         self.ref = ref

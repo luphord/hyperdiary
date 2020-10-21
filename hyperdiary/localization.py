@@ -10,9 +10,9 @@ DAYS_SHORT_EN = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 class Localization:
     def __init__(self,
-                 months: List[str]=MONTHS_EN,
-                 days_short: List[str]=DAYS_SHORT_EN,
-                 date_fmt: str='%Y-%m-%d') \
+                 months: List[str] = MONTHS_EN,
+                 days_short: List[str] = DAYS_SHORT_EN,
+                 date_fmt: str = '%Y-%m-%d') \
             -> None:
         assert len(months) == 12
         self.months = months

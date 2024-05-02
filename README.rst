@@ -17,11 +17,11 @@ A command line tool for writing diaries with hyperlinks. Free software, licensed
 Installation
 ------------
 
-hyperdiary requires Python version 3.5 or later. Once you have Python and pip installed on your machine (and available in your path) you can install hyperdiary by executing
+hyperdiary requires Python version 3.8 or later. Once you have Python and [pipx](https://pipx.pypa.io/stable/) installed on your machine (and available in your path), you can install hyperdiary by executing
 
 .. code-block:: console
 
-        pip install hyperdiary
+        pipx install hyperdiary
 
 Setup
 -----
@@ -32,12 +32,12 @@ A project file *hyperdiary.json* is required to setup your diary. It should be o
 
         {
                 "sources": [
-                        "2019/05.yaml",
-                        "2019/06.yaml"
+                        "2024/05.yaml",
+                        "2024/06.yaml"
                 ],
                 "expected": [
-                        {"start": "2019-05-01", "end": "2019-05-01"},
-                        {"start": "2019-06-09", "end": "2019-06-10"}
+                        {"start": "2024-05-01", "end": "2024-05-01"},
+                        {"start": "2024-06-09", "end": "2024-06-10"}
                 ],
                 "localization": {
                         "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -46,15 +46,15 @@ A project file *hyperdiary.json* is required to setup your diary. It should be o
                 }
         }
 
-You diary content itself is entered in yaml files like this (*2019/06.yaml*):
+You diary content itself is entered in yaml files like this (*2024/06.yaml*):
 
 .. code-block:: yaml
 
-        2019-06-09:
+        2024-06-09:
           - Some entry goes here with a $special_identity|link
           - This entry is +surprise tagged +mytag +nexttag
           - This entry contains nothing new
-        2019-06-10:
+        2024-06-10:
           - Same $special_identity|link again and $New_Identity|NewIdentity
           - $test +mytag
 

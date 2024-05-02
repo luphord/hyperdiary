@@ -5,8 +5,8 @@ hyperdiary
 .. image:: https://img.shields.io/pypi/v/hyperdiary.svg
         :target: https://pypi.python.org/pypi/hyperdiary
 
-.. image:: https://travis-ci.com/luphord/hyperdiary.svg
-        :target: https://travis-ci.com/luphord/hyperdiary
+.. image:: https://github.com/luphord/hyperdiary/actions/workflows/lint-test.yml/badge.svg
+        :target: https://github.com/luphord/hyperdiary/actions
 
 .. image:: https://readthedocs.org/projects/hyperdiary/badge/?version=latest
         :target: https://hyperdiary.readthedocs.io/en/latest/?badge=latest

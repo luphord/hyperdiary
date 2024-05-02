@@ -9,7 +9,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['PyYAML>=5.1', 'colorama>=0.4.1']
+requirements = ['PyYAML>=6.0', 'colorama>=0.4.6']
 
 setup_requirements = []
 
@@ -24,10 +24,11 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
     description='A command line tool for my image processing needs.',
     entry_points={

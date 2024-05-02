@@ -202,10 +202,18 @@ def diary_to_tiddlywiki_export(
     sentinel_found = False
     with open(str(file), "w") as f, open(str(tiddlywiki_base_file), "r") as wiki:
         for line in wiki:
-            f.write(line)
-            if _STORE_AREA_SENTINEL in line:
+            if not sentinel_found and _STORE_AREA_SENTINEL in line:
+                [before_sentinel, after_sentinel] = line.split(_STORE_AREA_SENTINEL, 1)
+                [before_close, after_close] = after_sentinel.split(">", 1)
+                f.write(before_sentinel)
+                f.write(_STORE_AREA_SENTINEL)
+                f.write(before_close)
+                f.write(">")
                 f.write(content)
+                f.write(after_close)
                 sentinel_found = True
+            else:
+                f.write(line)
     if not sentinel_found:
         raise Exception(
             "Could not find '{}' in file {}".format(

@@ -126,7 +126,7 @@ class TestHyperdiary(unittest.TestCase):
                 tiddlywiki_base_file=str(tiddlywiki_path),
             )
             with open(str(tiddlywiki_path), "w") as f:
-                f.write('---\nid="storeArea"\n---\n')
+                f.write('---\n<div id="storeArea">\n---\n')
             diary_to_tiddlywiki_export(self.diary, str(outfname), str(tiddlywiki_path))
             self.assertGreater(len(list(folder.iterdir())), 1)
 

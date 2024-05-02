@@ -2,8 +2,9 @@
 History
 =======
 
-0.7.0 (not yet)
----------------
+0.7.0 (2024-05-02)
+------------------
+* fix issue with tiddlywiki export (as the tiddlywiki file format has changed)
 * add support for Python 3.9 - 3.12
 * drop support for Python versions prior to 3.8
 * upgrade dependencies and dev dependencies

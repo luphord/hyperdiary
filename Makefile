@@ -56,6 +56,9 @@ type: ## run mypy type checks
 lint: ## check style with flake8
 	flake8 hyperdiary tests
 
+format: ## autoformat code with black 
+	black .
+
 test: ## run tests quickly with the default Python
 	python -m unittest discover . -v
 

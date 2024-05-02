@@ -6,7 +6,8 @@ History
 ---------------
 * add support for Python 3.9 - 3.12
 * drop support for Python versions prior to 3.8
-* upgrade dependencies and dev dependencies 
+* upgrade dependencies and dev dependencies
+* reformat code with black
 * migrate to github actions
 
 0.6.1 (2020-10-21)

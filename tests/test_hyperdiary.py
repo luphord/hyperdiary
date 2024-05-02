@@ -7,17 +7,19 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from hyperdiary import parser, Diary
-from hyperdiary.diary import find_ids, find_tags, tokenize, \
-    BadEntryException
+from hyperdiary.diary import find_ids, find_tags, tokenize, BadEntryException
 from hyperdiary.check import check
 from hyperdiary.stats import stats
 from hyperdiary.html import diary_to_html, diary_to_html_folder
-from hyperdiary.tiddlywiki import diary_to_tiddlers, \
-    diary_to_tiddlers_export, diary_to_tiddlywiki_export
+from hyperdiary.tiddlywiki import (
+    diary_to_tiddlers,
+    diary_to_tiddlers_export,
+    diary_to_tiddlywiki_export,
+)
 from hyperdiary.hugo import diary_to_hugo
 
 
-EXPECTED_TIDDLER_NAMES = {'2019-06-09.tid', '2019-05-01.tid', '2019-06-10.tid'}
+EXPECTED_TIDDLER_NAMES = {"2019-06-09.tid", "2019-05-01.tid", "2019-06-10.tid"}
 
 
 def in_test_folder(relative_path):
@@ -27,11 +29,11 @@ def in_test_folder(relative_path):
 class TestHyperdiary(unittest.TestCase):
 
     def setUp(self):
-        self.diary = Diary.discover(in_test_folder('src'))
+        self.diary = Diary.discover(in_test_folder("src"))
         self.diary.load_entries()
 
     def test_command_line_interface(self):
-        self.assertEqual('check', parser.parse_args(['check']).subcommand)
+        self.assertEqual("check", parser.parse_args(["check"]).subcommand)
 
     def test_loading_of_entries(self):
         self.assertGreaterEqual(len(self.diary.entries), 3)
@@ -41,9 +43,9 @@ class TestHyperdiary(unittest.TestCase):
 
     def test_localization_loaded(self):
         loc = self.diary.localization
-        self.assertEqual('Aug', loc.get_month(7))
-        self.assertEqual('Mi', loc.get_day_short(2))
-        self.assertEqual('3.11.2019', loc.format_date(date(2019, 11, 3)))
+        self.assertEqual("Aug", loc.get_month(7))
+        self.assertEqual("Mi", loc.get_day_short(2))
+        self.assertEqual("3.11.2019", loc.format_date(date(2019, 11, 3)))
 
     def test_check(self):
         check(self.diary)
@@ -67,29 +69,30 @@ class TestHyperdiary(unittest.TestCase):
         self.assertEqual(cnt, len(self.diary.entries))
 
     def test_missing_hyperdiary_json(self):
-        self.assertRaises(FileNotFoundError, Diary.discover,
-                          subpath=in_test_folder('.'))
+        self.assertRaises(
+            FileNotFoundError, Diary.discover, subpath=in_test_folder(".")
+        )
 
     def test_bad_entries(self):
-        path = in_test_folder('src/2019/05_bad_entries.yaml')
+        path = in_test_folder("src/2019/05_bad_entries.yaml")
         diary = Diary(dict(sources=[str(path)]))
         self.assertRaises(BadEntryException, diary.load_entries)
 
     def test_tokenization(self):
-        line = '+tag A $test-line by $Jane_Doe|Jane; expect no content +hallo'
+        line = "+tag A $test-line by $Jane_Doe|Jane; expect no content +hallo"
         self.assertEqual(2, len(find_tags(line)))
         self.assertEqual(2, len(find_ids(line)))
         self.assertEqual(7, len(list(tokenize(line))))
-        line = '$just_an_id)'
+        line = "$just_an_id)"
         self.assertEqual(1, len(find_ids(line)))
         self.assertEqual(2, len(list(tokenize(line))))
 
     def test_html_export(self):
         with TemporaryDirectory() as folder:
-            outfname = Path(folder) / 'out.html'
+            outfname = Path(folder) / "out.html"
             diary_to_html(self.diary, str(outfname))
             self.assertTrue(outfname.exists())
-            with open(str(outfname), 'r') as f:
+            with open(str(outfname), "r") as f:
                 self.assertGreater(len(f.read()), 0)
 
     def test_htmlfolder_export(self):
@@ -108,20 +111,23 @@ class TestHyperdiary(unittest.TestCase):
                 self.assertIn(fname, files)
 
     def test_tiddywiki_export(self):
-        tiddlywiki = 'tiddlywiki_mock.html'
+        tiddlywiki = "tiddlywiki_mock.html"
         with TemporaryDirectory() as folder:
             folder = Path(folder)
             tiddlywiki_path = folder / tiddlywiki
-            outfname = folder / 'out.html'
-            with open(str(tiddlywiki_path), 'w') as f:
-                f.write('---\n---\n')  # no "storeArea"
-            self.assertRaises(Exception, diary_to_tiddlywiki_export,
-                              diary_instance=self.diary, file=str(outfname),
-                              tiddlywiki_base_file=str(tiddlywiki_path))
-            with open(str(tiddlywiki_path), 'w') as f:
+            outfname = folder / "out.html"
+            with open(str(tiddlywiki_path), "w") as f:
+                f.write("---\n---\n")  # no "storeArea"
+            self.assertRaises(
+                Exception,
+                diary_to_tiddlywiki_export,
+                diary_instance=self.diary,
+                file=str(outfname),
+                tiddlywiki_base_file=str(tiddlywiki_path),
+            )
+            with open(str(tiddlywiki_path), "w") as f:
                 f.write('---\nid="storeArea"\n---\n')
-            diary_to_tiddlywiki_export(self.diary, str(outfname),
-                                       str(tiddlywiki_path))
+            diary_to_tiddlywiki_export(self.diary, str(outfname), str(tiddlywiki_path))
             self.assertGreater(len(list(folder.iterdir())), 1)
 
     def test_tiddler_serialization(self):

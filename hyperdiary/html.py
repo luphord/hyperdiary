@@ -9,9 +9,9 @@ from .htmltags import article, header, head, h1, h4, ul, li, a, span, div, \
     footer, meta, link, style, html, body, title, HTMLElement, HTMLContent
 
 
-def wrap_page(body_content: HTMLContent, page_title: str = None,
+def wrap_page(body_content: HTMLContent, page_title: Optional[str] = None,
               encoding: str = 'utf-8', css_references: Iterable[str] = [],
-              inline_css: str = None) -> html:
+              inline_css: Optional[str] = None) -> html:
     h = head(
             meta(charset=encoding),
             meta(name='viewport',
@@ -28,7 +28,7 @@ def wrap_page(body_content: HTMLContent, page_title: str = None,
 
 def day_to_html(current: date, entry: Iterable[str],
                 localization: Localization,
-                link_to_id_fn: Callable[[Optional[str]], str] = None) \
+                link_to_id_fn: Optional[Callable[[Optional[str]], str]] = None) \
         -> HTMLElement:
     day = article(_class='card', _id=str(path_for_date(current)))(
                 header(h4(localization.format_date(current)))
@@ -58,7 +58,7 @@ def day_to_html(current: date, entry: Iterable[str],
     return day
 
 
-def wrap_html_page(content: HTMLContent, title: str = None, level: int = 0) \
+def wrap_html_page(content: HTMLContent, title: Optional[str] = None, level: int = 0) \
         -> html:
     return wrap_page(
         div(content, _class='content'),
